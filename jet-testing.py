@@ -23,14 +23,13 @@ pubber = Publisher(client_id="jet-pubber")
 
 def publish_temp_status():
 	for sensor in W1ThermSensor.get_available_sensors():
-        print("Sensor %s has temperature %.2f" % (sensor.id, sensor.get_temperature()))
 		if(sensor.id == "28-030197944df7"):
 			temp_f7 = sensor.get_temperature()
 		else if(sensor.id == "28-0307979401b9"):
-    		temp_b9 = sensor.get_temperature()
+			temp_b9 = sensor.get_temperature()
 		else:
-    		temp_f0 = sensor.get_temperature
-    			
+			temp_f0 = sensor.get_temperature
+				
 	message = {
 		'temp_jet1' : temp_f7,
 		'temp_jet2': temp_f0,
