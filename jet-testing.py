@@ -46,7 +46,7 @@ def read_temp():
 		return temp_c, temp_f
 
 def publish_temp_status():
-	temp_c, temp_f = readTemp()
+	temp_c, temp_f = read_temp()
 	message = {
 		'temp_c' : temp_c,
 		'temp_f': temp_f,
