@@ -23,6 +23,7 @@ ads = ADS.ADS1115(i2c)
 ads.gain = 1
 chan = AnalogIn(ads, ADS.P0)
 chan2 = AnalogIn(ads,ADS.P1)
+
 # Setup Pubber
 pubber = Publisher(client_id="jet-pubber")
 
@@ -43,8 +44,6 @@ def read_temp():
 		temp_c = float(temp_string) / 1000.0
 		temp_f = temp_c * 9.0 / 5.0 + 32.0
 		return temp_c, temp_f
-
-while True:
 
 def publish_temp_status():
 	temp_c, temp_f = readTemp()
