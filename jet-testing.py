@@ -37,11 +37,11 @@ def publish_temp_status():
 			temp_b9 = sensor.get_temperature()
 		else:
 			temp_f0 = sensor.get_temperature
-        message = {
-	    	'temp_jet1' : temp_f7,
-	    	'temp_jet2': temp_f0,
-	    	'compartment_temp' : temp_b9
-        }
+		message = {
+			'temp_jet1' : temp_f7,
+			'temp_jet2': temp_f0,
+			'compartment_temp' : temp_b9
+		}
 	print(message)
 	app_json = json.dumps(message)
 	pubber.publish("/status/temp",app_json)
