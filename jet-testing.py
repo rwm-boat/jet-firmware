@@ -38,8 +38,8 @@ def publish_temp_status():
 		else:
 			temp_f0 = sensor.get_temperature()
 		message = {
-			'temp_jet1' : str(temp_f7),
-			'temp_jet2': str(temp_f0),
+			'jet1_temp' : str(temp_f7),
+			'jet2_temp': str(temp_f0),
 			'compartment_temp' : str(temp_b9)
 		}
 	print(message)
