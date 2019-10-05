@@ -9,12 +9,12 @@ from mqtt_client.publisher import Publisher
 import json
 
 # Setup Temp Sensor
-# os.system('modprobe w1-gpio')
-# os.system('modprobe w1-therm')
+os.system('modprobe w1-gpio')
+os.system('modprobe w1-therm')
  
-# base_dir = '/sys/bus/w1/devices/'
-# device_folder = glob.glob(base_dir + '28*')[0]
-# device_file = device_folder + w1_slave'
+base_dir = '/sys/bus/w1/devices/'
+device_folder = glob.glob(base_dir + '28*')[0]
+device_file = device_folder + w1_slave'
 
 # Setup ADC Sensor
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -50,6 +50,7 @@ def publish_temp_status():
         'temp_c' : temp_c,
         'temp_f': temp_f,
     }
+    print(message)
     app_json = json.dumps(message)
     pubber.publish("/status/temp",app_json)
 
