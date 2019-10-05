@@ -50,48 +50,48 @@ pubber = Publisher(client_id="jet-pubber")
 
 while True:
 
-    for sensor in glob.glob("/sys/bus/w1/devices/28-00*/w1_slave"):
-        id = sensor.split("/")[5]
+	for sensor in glob.glob("/sys/bus/w1/devices/28-00*/w1_slave"):
+		id = sensor.split("/")[5]
 
-        try:
-            f = open(sensor, "r")
-            data = f.read()
-            f.close()
-            if "YES" in data:
-            (discard, sep, reading) = data.partition(' t=')
-            t = float(reading) / 1000.0
-            print("{} {:.1f}".format(id, t))
-            else:
-            print("999.9")
+		try:
+			f = open(sensor, "r")
+			data = f.read()
+			f.close()
+			if "YES" in data:
+			(discard, sep, reading) = data.partition(' t=')
+			t = float(reading) / 1000.0
+			print("{} {:.1f}".format(id, t))
+			else:
+			print("999.9")
 
-        except:
-            pass
+		except:
+			pass
 
 def publish_temp_status():
-    temp_c, temp_f = readTemp()
-    message = {
-        'temp_c' : temp_c,
-        'temp_f': temp_f,
-    }
-    print(message)
-    app_json = json.dumps(message)
-    pubber.publish("/status/temp",app_json)
+	temp_c, temp_f = readTemp()
+	message = {
+		'temp_c' : temp_c,
+		'temp_f': temp_f,
+	}
+	print(message)
+	app_json = json.dumps(message)
+	pubber.publish("/status/temp",app_json)
 
 def publish_adc_status():
 
-    jet1_amps = ((chan.voltage - 2.47) / 0.013) * 100
-    jet2_amps = ((chan2.voltage - 2.47) / 0.013) * 100
+	jet1_amps = ((chan.voltage - 2.47) / 0.013) * 100
+	jet2_amps = ((chan2.voltage - 2.47) / 0.013) * 100
 
-    message = {
-        'jet1_amps': jet1_amps,
-        'jet2_amps': jet2_amps
-    }
-    print(json.dumps(message))
-    app_json = json.dumps(message)
-    pubber.publish("/status/adc",app_json)
+	message = {
+		'jet1_amps': jet1_amps,
+		'jet2_amps': jet2_amps
+	}
+	print(json.dumps(message))
+	app_json = json.dumps(message)
+	pubber.publish("/status/adc",app_json)
 
 while(True):
-    #publish_temp_status()
-    publish_adc_status()
-    time.sleep(1)
+	#publish_temp_status()
+	publish_adc_status()
+	time.sleep(1)
 
