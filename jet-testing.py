@@ -8,13 +8,17 @@ import glob
 from mqtt_client.publisher import Publisher
 import json
 
-# Setup Temp Sensor
-# os.system('modprobe w1-gpio')
-# os.system('modprobe w1-therm')
- 
+#base directory with temperature sensors (f7,b9,f0)  
 base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28*')[0]
-device_file = device_folder + '/w1_slave'
+#f7 directory
+device_folder_1 = glob.glob(base_dir + '28-030167944df7')[0]
+device_file_1 = device_folder_1 + '/w1_slave'
+#b9 directory
+device_folder_2 = glob.glob(base_dir + '28-030797940')[0]
+device_file_2 = device_folder_2 + '/w1_slave'
+#f0 directory
+device_folder_3 = glob.glob(base_dir + '28-03219779f01')[0]
+device_file_3 = device_folder_3 + '/w1_slave'
 
 # Setup ADC Sensor
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -28,16 +32,23 @@ chan2 = AnalogIn(ads,ADS.P1)
 pubber = Publisher(client_id="jet-pubber")
 
 def read_temp_raw():
-	f = open(device_file, 'r')
-	lines = f.readlines()
+	f = open(device_file_1, 'r')
+	temp1 = f.readlines()
 	f.close()
-	return lines
+	f = open(device_file_2, 'r')
+	temp2 = f.readlines()
+	f.close()
+	f = open(device_file_3, 'r')
+	temp3 = f.readlines()
+	f.close()
+	print(temp1 + " : " + temp2 + " : "+temp3 + ":" )
+	return temp1
  
 def read_temp():
-	lines = read_temp_raw()
+	temp1 = read_temp_raw()
 	while lines[0].strip()[-3:] != 'YES':
 		time.sleep(0.2)
-		lines = read_temp_raw()
+		temo1 = read_temp_raw()
 	equals_pos = lines[1].find('t=')
 	if equals_pos != -1:
 		temp_string = lines[1][equals_pos+2:]
