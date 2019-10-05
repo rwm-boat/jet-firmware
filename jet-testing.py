@@ -7,7 +7,7 @@ import os
 import glob
 from mqtt_client.publisher import Publisher
 import json
-import w1thermsensor import W1ThermSensor
+from w1thermsensor import  W1ThermSensor
 
 
 # Setup ADC Sensor
