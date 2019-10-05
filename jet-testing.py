@@ -11,14 +11,14 @@ import json
 #base directory with temperature sensors (f7,b9,f0)  
 base_dir = '/sys/bus/w1/devices/'
 #f7 directory
-device_folder_1 = glob.glob(base_dir + '28-030167944df7')[0]
-device_file_1 = device_folder_1 + '/w1_slave'
+device_folder_1 = glob.glob(base_dir + '28-030167944df7')
+device_file_1 = str(device_folder_1) + '/w1_slave'
 #b9 directory
-device_folder_2 = glob.glob(base_dir + '28-030797940')[0]
-device_file_2 = device_folder_2 + '/w1_slave'
+device_folder_2 = glob.glob(base_dir + '28-030797940')
+device_file_2 = str(device_folder_2) + '/w1_slave'
 #f0 directory
-device_folder_3 = glob.glob(base_dir + '28-03219779f01')[0]
-device_file_3 = device_folder_3 + '/w1_slave'
+device_folder_3 = glob.glob(base_dir + '28-03219779f01')
+device_file_3 = str(device_folder_3) + '/w1_slave'
 
 # Setup ADC Sensor
 i2c = busio.I2C(board.SCL, board.SDA)
