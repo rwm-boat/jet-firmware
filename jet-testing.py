@@ -14,7 +14,7 @@ import json
  
 base_dir = '/sys/bus/w1/devices/'
 device_folder = glob.glob(base_dir + '28*')[0]
-device_file = device_folder + w1_slave'
+device_file = device_folder + w1_slave
 
 # Setup ADC Sensor
 i2c = busio.I2C(board.SCL, board.SDA)
