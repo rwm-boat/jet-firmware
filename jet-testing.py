@@ -25,7 +25,7 @@ def publish_temp_status():
 	for sensor in W1ThermSensor.get_available_sensors():
 		if(sensor.id == "28-030197944df7"):
 			temp_f7 = sensor.get_temperature()
-		else if(sensor.id == "28-0307979401b9"):
+		elif(sensor.id == "28-0307979401b9"):
 			temp_b9 = sensor.get_temperature()
 		else:
 			temp_f0 = sensor.get_temperature
