@@ -36,7 +36,7 @@ def publish_temp_status():
 		elif(sensor.id == "0307979401b9"):
 			temp_b9 = sensor.get_temperature()
 		else:
-			temp_f0 = sensor.get_temperature
+			temp_f0 = sensor.get_temperature()
 		message = {
 			'temp_jet1' : str(temp_f7),
 			'temp_jet2': str(temp_f0),
