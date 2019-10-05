@@ -58,12 +58,11 @@ while True:
 			data = f.read()
 			f.close()
 			if "YES" in data:
-			(discard, sep, reading) = data.partition(' t=')
-			t = float(reading) / 1000.0
-			print("{} {:.1f}".format(id, t))
+				(discard, sep, reading) = data.partition(' t=')
+				t = float(reading) / 1000.0
+				print("{} {:.1f}".format(id, t))
 			else:
-			print("999.9")
-
+				print("999.9")
 		except:
 			pass
 
