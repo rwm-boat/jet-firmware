@@ -7,18 +7,8 @@ import os
 import glob
 from mqtt_client.publisher import Publisher
 import json
+import w1thermsensor import W1ThermSensor
 
-#base directory with temperature sensors (f7,b9,f0)  
-base_dir = '/sys/bus/w1/devices/'
-#f7 directory
-device_folder_1 = glob.glob(base_dir + '28-030167944df7')
-device_file_1 = str(device_folder_1) + '/w1_slave'
-#b9 directory
-device_folder_2 = glob.glob(base_dir + '28-030797940')
-device_file_2 = str(device_folder_2) + '/w1_slave'
-#f0 directory
-device_folder_3 = glob.glob(base_dir + '28-03219779f01')
-device_file_3 = str(device_folder_3) + '/w1_slave'
 
 # Setup ADC Sensor
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -31,36 +21,20 @@ chan2 = AnalogIn(ads,ADS.P1)
 # Setup Pubber
 pubber = Publisher(client_id="jet-pubber")
 
-def read_temp_raw():
-	f = open(device_file_1, 'r')
-	temp1 = f.readlines()
-	f.close()
-	f = open(device_file_2, 'r')
-	temp2 = f.readlines()
-	f.close()
-	f = open(device_file_3, 'r')
-	temp3 = f.readlines()
-	f.close()
-	print(temp1 + " : " + temp2 + " : "+temp3 + ":" )
-	return temp1
- 
-def read_temp():
-	temp1 = read_temp_raw()
-	while lines[0].strip()[-3:] != 'YES':
-		time.sleep(0.2)
-		temo1 = read_temp_raw()
-	equals_pos = lines[1].find('t=')
-	if equals_pos != -1:
-		temp_string = lines[1][equals_pos+2:]
-		temp_c = float(temp_string) / 1000.0
-		temp_f = temp_c * 9.0 / 5.0 + 32.0
-		return temp_c, temp_f
-
 def publish_temp_status():
-	temp_c, temp_f = read_temp()
+	for sensor in W1ThermSensor.get_available_sensors():
+        print("Sensor %s has temperature %.2f" % (sensor.id, sensor.get_temperature()))
+		if(sensor.id == "28-030197944df7"):
+			temp_f7 = sensor.get_temperature()
+		else if(sensor.id == "28-0307979401b9"):
+    		temp_b9 = sensor.get_temperature()
+		else:
+    		temp_f0 = sensor.get_temperature
+    			
 	message = {
-		'temp_c' : temp_c,
-		'temp_f': temp_f,
+		'temp_jet1' : temp_f7,
+		'temp_jet2': temp_f0,
+		'compartment_temp' : temp_b9:
 	}
 	print(message)
 	app_json = json.dumps(message)
