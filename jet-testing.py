@@ -26,22 +26,21 @@ temp_f0 = 0
 
 def publish_temp_status():
 		
-		global temp_f7
-		global temp_b9
-		global temp_f0
+	global temp_f7
+	global temp_b9
+	global temp_f0
 
-		for sensor in W1ThermSensor.get_available_sensors():
-		    if(sensor.id == "28-030197944df7"):
-		        temp_f7 = sensor.get_temperature()
-		    elif(sensor.id == "28-0307979401b9"):
+	for sensor in W1ThermSensor.get_available_sensors():
+		if(sensor.id == "28-030197944df7"):
+			temp_f7 = sensor.get_temperature()
+		elif(sensor.id == "28-0307979401b9"):
 			temp_b9 = sensor.get_temperature()
-		    else:
-		        temp_f0 = sensor.get_temperature
-				
+		else:
+			temp_f0 = sensor.get_temperature
         message = {
-	    'temp_jet1' : temp_f7,
-	    'temp_jet2': temp_f0,
-	    'compartment_temp' : temp_b9
+	    	'temp_jet1' : temp_f7,
+	    	'temp_jet2': temp_f0,
+	    	'compartment_temp' : temp_b9
         }
 	print(message)
 	app_json = json.dumps(message)
