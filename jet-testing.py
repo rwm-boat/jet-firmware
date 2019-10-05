@@ -62,5 +62,5 @@ def publish_adc_status():
 while(True):
 	publish_temp_status()
 	publish_adc_status()
-	time.sleep(1)
+	time.sleep(0.1)
 
