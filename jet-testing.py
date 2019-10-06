@@ -28,6 +28,7 @@ temp_f0 = 0
 def temp_runner():
 	while True:
 		publish_temp_status()
+		print("here")
 		sleep(1)
 
 def publish_temp_status():
