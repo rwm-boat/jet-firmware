@@ -72,7 +72,7 @@ def publish_adc_status():
 
 # MAIN METHOD
 thread = Thread(target=temp_runner)
-thread.start
+thread.start()
 
 while(True):
 	#publish_temp_status()
