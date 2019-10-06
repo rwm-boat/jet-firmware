@@ -8,6 +8,7 @@ import glob
 from mqtt_client.publisher import Publisher
 import json
 from w1thermsensor import  W1ThermSensor
+from threading import Thread
 
 
 # Setup ADC Sensor
@@ -23,6 +24,11 @@ pubber = Publisher(client_id="jet-pubber")
 temp_f7 = 0
 temp_b9 = 0
 temp_f0 = 0
+
+def temp_runner():
+	while True:
+    	publish_temp_status()
+		sleep(1)
 
 def publish_temp_status():
 		
@@ -62,8 +68,13 @@ def publish_adc_status():
 	app_json = json.dumps(message)
 	pubber.publish("/status/adc",app_json)
 
+
+# MAIN METHOD
+thread = Thread(target=temp_runner)
+thread.start
+
 while(True):
-	publish_temp_status()
+	#publish_temp_status()
 	publish_adc_status()
 	time.sleep(0.1)
 
