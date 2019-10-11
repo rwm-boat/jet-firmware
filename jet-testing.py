@@ -18,6 +18,7 @@ ads = ADS.ADS1115(i2c)
 ads.gain = 1
 chan = AnalogIn(ads, ADS.P0)
 chan2 = AnalogIn(ads,ADS.P1)
+chan3 = AnalogIn(ads, ADS.P2)
 
 # Setup Pubber
 pubber = Publisher(client_id="jet-pubber")
@@ -56,15 +57,16 @@ def publish_adc_status():
 
 	jet1_amps = ((chan.voltage - 2.47) / 0.013)
 	jet2_amps = ((chan2.voltage - 2.47) / 0.013)
+	pack_voltage = (chan3.voltage / 5)
 
 	message = {
 		'jet1_amps': jet1_amps,
-		'jet2_amps': jet2_amps
+		'jet2_amps': jet2_amps,
+		'pack_voltage' : pack_voltage
 	}
 	print(json.dumps(message))
 	app_json = json.dumps(message)
 	pubber.publish("/status/adc",app_json)
-
 
 # MAIN METHOD
 thread = Thread(target=temp_runner)
