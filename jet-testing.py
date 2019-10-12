@@ -57,7 +57,7 @@ def publish_adc_status():
 
 	jet1_amps = ((chan.voltage - 2.47) / 0.013)
 	jet2_amps = ((chan2.voltage - 2.47) / 0.013)
-	pack_voltage = (chan3.voltage * 5)
+	pack_voltage = round((chan3.voltage * 5),2)
 
 	message = {
 		'jet1_amps': jet1_amps,
