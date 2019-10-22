@@ -41,22 +41,6 @@ class Jet:
 
     #--end Jet init--
     
-    def setup(self):
-        if self.port_jet: #port jet
-            Jet2.th_rq(0)
-            Jet2.rb_rq('up')
-            Jet2.dir_rq(0)
-            print("Jet 2 (Port) ESC ARMED")
-        else:            #starboard jet
-            Jet1.th_rq(0)
-            Jet1.rb_rq('up')
-            Jet1.dir_rq(0)
-            print("Jet 1 (Starboard) ESC ARMED")
-
-        time.sleep(5) #time for ESCs to arm
-        
-        
-    #--end setup--
     
     def th_rq(self, mag):
         if mag > 100:
@@ -115,6 +99,22 @@ class Jet:
     
     #--end dir_rq--
 
+    def setup(self):
+        if self.port_jet: #port jet
+            Jet2.th_rq(0)
+            Jet2.rb_rq('up')
+            Jet2.dir_rq(0)
+            print("Jet 2 (Port) ESC ARMED")
+        else:            #starboard jet
+            Jet1.th_rq(0)
+            Jet1.rb_rq('up')
+            Jet1.dir_rq(0)
+            print("Jet 1 (Starboard) ESC ARMED")
+
+        time.sleep(5) #time for ESCs to arm
+        
+        
+    #--end setup--
 
 #Brent's basic testing
 Jet1 = Jet(True)
