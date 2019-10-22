@@ -119,4 +119,6 @@ class Jet:
 
 #Brent's basic testing
 setup()
+Jet1.rb_rq('down')
+Jet2.rb_rq('down')
 
