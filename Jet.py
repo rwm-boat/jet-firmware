@@ -10,11 +10,13 @@ class Jet:
     def __init__(self, port_jet):
         self.port_jet = port_jet
         if port_jet == False: #Jet1 Starboard Jet
+            print("Starboard Jet Init")
             self.ESC1 = kit.servo[4]
             self.RB1 = kit.servo[5]
             self.DIR1 = kit.servo[6]
             
         if port_jet == True: #Jet2 Port Jet
+            print("Port Jet Init")
             self.ESC2 = kit.servo[0]
             self.RB2 = kit.servo[1]
             self.DIR2 = kit.servo[2]
