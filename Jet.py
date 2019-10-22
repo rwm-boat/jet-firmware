@@ -13,19 +13,17 @@ class Jet:
             self.ESC1 = kit.servo[4]
             self.RB1 = kit.servo[5]
             self.DIR1 = kit.servo[6]
-            #ESC PWM assign
-            ESC1.actuation_range = 180 
-            ESC1.set_pulse_width_range(930,2300) #correct microsecond range for Turnigy 70A ESC
-            #RB PWM assign
-            RB1.actuation_range = 180
-            RB1.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
-            #DIR PWM assign
-            DIR1.actuation_range = 180
-            DIR1.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
+            
         if port_jet == True: #Jet2 Port Jet
             self.ESC2 = kit.servo[0]
             self.RB2 = kit.servo[1]
             self.DIR2 = kit.servo[2]
+            
+        
+    #--end Jet init--
+    
+    def setup(self):
+        if self.port_jet: #port jet
             #ESC PWM assign
             ESC2.actuation_range = 180 
             ESC2.set_pulse_width_range(930,2300) #correct microsecond range for Turnigy 70A ESC
@@ -35,16 +33,20 @@ class Jet:
             #DIR PWM assign
             DIR2.actuation_range = 180
             DIR2.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
-        
-    #--end Jet init--
-    
-    def setup(self):
-        if self.port_jet: #port jet
             Jet2.th_rq(0)
             Jet2.rb_rq('up')
             Jet2.dir_rq(0)
             print("Jet 2 (Port) ESC ARMED")
         else:            #starboard jet
+            #ESC PWM assign
+            ESC1.actuation_range = 180 
+            ESC1.set_pulse_width_range(930,2300) #correct microsecond range for Turnigy 70A ESC
+            #RB PWM assign
+            RB1.actuation_range = 180
+            RB1.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
+            #DIR PWM assign
+            DIR1.actuation_range = 180
+            DIR1.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
             Jet1.th_rq(0)
             Jet1.rb_rq('up')
             Jet1.dir_rq(0)
