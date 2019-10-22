@@ -116,8 +116,11 @@ class Jet:
     
     #--end dir_rq--
 
+def main():
+    Jet1 = Jet(False)
+    Jet1.setup()
 
-#Brent's basic testing
-Jet1 = Jet(False)
-Jet1.setup()
+if __name__ == "__main__":
+    main()
+
 
