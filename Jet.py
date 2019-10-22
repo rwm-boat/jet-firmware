@@ -18,4 +18,5 @@ class Jet:
 Jet1 = Jet(False)
 Jet2 = Jet(True)
 
-print("Jet 1 is Starboard, so False..." + Jet1.port_jet)
+print(Jet1.port_jet)
+print(Jet2.port_jet)
