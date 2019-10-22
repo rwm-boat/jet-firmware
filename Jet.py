@@ -42,20 +42,19 @@ class Jet:
     #--end Jet init--
     
     def setup(self):
-        Jet1 = Jet(False)
-        Jet2 = Jet(True)
-
-        Jet1.th_rq(0)
-        Jet2.th_rq(0)
-        
-        Jet1.rb_rq('up')
-        Jet2.rb_rq('up')
-
-        Jet1.dir_rq(0)
-        Jet2.dir_rq(0)
+        if self.port_jet: #port jet
+            Jet2.th_rq(0)
+            Jet2.rb_rq('up')
+            Jet2.dir_rq(0)
+            print("Jet 2 (Port) ESC ARMED")
+        else:            #starboard jet
+            Jet1.th_rq(0)
+            Jet1.rb_rq('up')
+            Jet1.dir_rq(0)
+            print("Jet 1 (Starboard) ESC ARMED")
 
         time.sleep(5) #time for ESCs to arm
-        print("ESCs ARMED")
+        
         
     #--end setup--
     
@@ -118,7 +117,11 @@ class Jet:
 
 
 #Brent's basic testing
-setup()
+Jet1 = Jet(True)
+Jet2 = Jet(False)
+
+Jet1.setup()
+Jet2.setup()
 Jet1.rb_rq('down')
 Jet2.rb_rq('down')
 
