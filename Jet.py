@@ -5,22 +5,24 @@ kit = ServoKit(channels=16)
 DIR1_offset = 0
 DIR2_offset = 0
 
+ESC1 = kit.servo[4]
+RB1 = kit.servo[5]
+DIR1 = kit.servo[6]
+
+ESC2 = kit.servo[0]
+RB2 = kit.servo[1]
+DIR2 = kit.servo[2]
+
 class Jet:
 
     def __init__(self, port_jet):
         self.port_jet = port_jet
         if port_jet == False: #Jet1 Starboard Jet
             print("Starboard Jet Init")
-            ESC1 = kit.servo[4]
-            RB1 = kit.servo[5]
-            DIR1 = kit.servo[6]
+            
             
         if port_jet == True: #Jet2 Port Jet
             print("Port Jet Init")
-            ESC2 = kit.servo[0]
-            RB2 = kit.servo[1]
-            DIR2 = kit.servo[2]
-            
         
     #--end Jet init--
     
