@@ -8,6 +8,8 @@ def main():
     Jet1.zero()
     Jet2.zero()
 
+    startup()
+
     while(True):
         for x in range(-25,25,1):
             Jet1.dir_rq(x)
