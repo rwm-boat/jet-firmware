@@ -120,6 +120,7 @@ class Jet:
         self.rb_rq('down')
         time.sleep(0.5)
         self.rb_rq('up')
+        time.sleep(0.5)
 
         self.dir_rq(25)
         time.sleep(0.5)
@@ -128,7 +129,7 @@ class Jet:
         self.dir_rq(0)
 
         self.th_rq(10)
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.th_rq(0)
 
 
