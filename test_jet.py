@@ -1,4 +1,4 @@
-from Jet import Jet
+from jet import Jet
 
 def main():
     Jet1 = Jet(False)
