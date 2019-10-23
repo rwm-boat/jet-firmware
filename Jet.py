@@ -8,6 +8,7 @@ DIR2_offset = 0
 ESC1 = kit.servo[4]
 RB1 = kit.servo[5]
 DIR1 = kit.servo[6]
+
 ESC2 = kit.servo[0]
 RB2 = kit.servo[1]
 DIR2 = kit.servo[2]
@@ -42,34 +43,31 @@ class Jet:
         
     #--end Jet init--
     
-    def setup(self):
+    def zero(self):
         if self.port_jet: #port jet
             self.th_rq(0)
             self.rb_rq('up')
             self.dir_rq(0)
-            print("Jet 2 (Port) ESC ARMED")
+            print("Jet 2 Zeroed")
         else:            #starboard jet
             self.th_rq(0)
             self.rb_rq('up')
             self.dir_rq(0)
-            print("Jet 1 (Starboard) ESC ARMED")
-
-    #--end setup--
+            print("Jet 1 Zeroed")
+    #--end zero--
     
     def th_rq(self, mag):
         if mag > 100:
             mag = 100
             print("Throttle mag limited to 100")
-
         if mag < 0:
             print("Throttle mag needs to be positive")
 
-        vel = ((abs(mag))*18)/10 #converts mag into a pwm value
+        vel = ((mag)*18)/10 #converts mag into a pwm value
 
         #math to keep pwm values within usable range
         if vel < 10 and vel > 0:
             vel = 10
-
         if vel > 180:
             vel = 180
         #--end of math
@@ -78,14 +76,13 @@ class Jet:
             ESC2.angle = vel
         else:             #stardboard jet
             ESC1.angle = vel
-
     #--end th_rq--
 
     def rb_rq(self,level):
         if level == 'down':
             pos = 20
         if level == 'mid':
-            pos = 75
+            pos = 60
         if level == 'up':
             pos = 100
         
@@ -93,35 +90,28 @@ class Jet:
             RB2.angle = pos
         else:             #starboard jet
             RB1.angle = pos
-
     #--end rb_rq--
 
     def dir_rq(self,angle): #range is 25 to -25 degrees (phyiscally)
         if angle > 25:
             angle = 25
             print("Director limited to 25")
-
         if angle < -25:
             angle = -25
             print("Director limited to -25")
-
 
         if self.port_jet: #port jet
             DIR2.angle = 90 + DIR2_offset + angle
         else:
             DIR1.angle = 90 + DIR1_offset + angle
-    
     #--end dir_rq--
 
 def main():
     Jet1 = Jet(False)
     Jet2 = Jet(True)
 
-    Jet1.setup()
-    Jet2.setup()
-
-    Jet1.rb_rq('down')
-    Jet2.dir_rq(10)
+    Jet1.zero()
+    Jet2.zero()
 
 if __name__ == "__main__":
     main()
