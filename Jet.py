@@ -37,9 +37,9 @@ class Jet:
             #DIR PWM assign
             DIR2.actuation_range = 180
             DIR2.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
-            Jet2.th_rq(0)
-            Jet2.rb_rq('up')
-            Jet2.dir_rq(0)
+            self.th_rq(0)
+            self.rb_rq('up')
+            self.dir_rq(0)
             print("Jet 2 (Port) ESC ARMED")
         else:            #starboard jet
             #ESC PWM assign
@@ -51,9 +51,9 @@ class Jet:
             #DIR PWM assign
             DIR1.actuation_range = 180
             DIR1.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
-            Jet1.th_rq(0)
-            Jet1.rb_rq('up')
-            Jet1.dir_rq(0)
+            self.th_rq(0)
+            self.rb_rq('up')
+            self.dir_rq(0)
             print("Jet 1 (Starboard) ESC ARMED")
 
         time.sleep(5) #time for ESCs to arm
