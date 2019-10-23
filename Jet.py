@@ -124,6 +124,7 @@ def main():
     Jet2.setup()
 
     Jet1.rb_rq('down')
+    Jet2.dir_rq(10)
 
 if __name__ == "__main__":
     main()
