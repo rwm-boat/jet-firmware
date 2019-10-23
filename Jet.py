@@ -27,7 +27,7 @@ class Jet:
             #DIR PWM assign
             DIR1.actuation_range = 180
             DIR1.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
-            print("Starboard Jet Init")
+            print("Jet 1 Init")
             
         if port_jet == True: #Jet2 Port Jet
             #ESC PWM assign
@@ -39,7 +39,7 @@ class Jet:
             #DIR PWM assign
             DIR2.actuation_range = 180
             DIR2.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
-            print("Port Jet Init")
+            print("Jet 2 Init")
         
     #--end Jet init--
     
@@ -74,8 +74,10 @@ class Jet:
 
         if self.port_jet: #port jet
             ESC2.angle = vel
+            print("Jet 2 set th_rq: %s" %(vel))
         else:             #stardboard jet
             ESC1.angle = vel
+            print("Jet 1 set th_rq: %s" %(vel))
     #--end th_rq--
 
     def rb_rq(self,level):
@@ -88,8 +90,10 @@ class Jet:
         
         if self.port_jet: #port jet
             RB2.angle = pos
+            print("Jet 2 set rb_rq: " + level)
         else:             #starboard jet
             RB1.angle = pos
+            print("Jet 1 set rb_rq: " + level)
     #--end rb_rq--
 
     def dir_rq(self,angle): #range is 25 to -25 degrees (phyiscally)
@@ -101,9 +105,13 @@ class Jet:
             print("Director limited to -25")
 
         if self.port_jet: #port jet
-            DIR2.angle = 90 + DIR2_offset + angle
+            dir2PWM = 90 + DIR2_offset + angle
+            DIR2.angle = dir2PWM
+            print("Jet 2 set dir_rq: %s" %(dir2PWM))
         else:
-            DIR1.angle = 90 + DIR1_offset + angle
+            dir1PWM = 90 + DIR1_offset + angle
+            DIR1.angle = dir1PWM
+            print("Jet 1 set dir_rq: %s" %(dir1PWM))
     #--end dir_rq--
 
 
