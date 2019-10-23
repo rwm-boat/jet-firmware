@@ -106,14 +106,5 @@ class Jet:
             DIR1.angle = 90 + DIR1_offset + angle
     #--end dir_rq--
 
-def main():
-    Jet1 = Jet(False)
-    Jet2 = Jet(True)
-
-    Jet1.zero()
-    Jet2.zero()
-
-if __name__ == "__main__":
-    main()
 
 
