@@ -5,21 +5,18 @@ kit = ServoKit(channels=16)
 DIR1_offset = 0
 DIR2_offset = 0
 
-global ESC1
-global ESC2
-global RB1
-global RB2
-global DIR1
-global DIR2
+ESC1 = kit.servo[4]
+RB1 = kit.servo[5]
+DIR1 = kit.servo[6]
+ESC2 = kit.servo[0]
+RB2 = kit.servo[1]
+DIR2 = kit.servo[2]
 
 class Jet:
 
     def __init__(self, port_jet):
         self.port_jet = port_jet
         if port_jet == False: #Jet1 Starboard Jet
-            ESC1 = kit.servo[4]
-            RB1 = kit.servo[5]
-            DIR1 = kit.servo[6]
             #ESC PWM assign
             ESC1.actuation_range = 180 
             ESC1.set_pulse_width_range(930,2300) #correct microsecond range for Turnigy 70A ESC
@@ -32,9 +29,6 @@ class Jet:
             print("Starboard Jet Init")
             
         if port_jet == True: #Jet2 Port Jet
-            ESC2 = kit.servo[0]
-            RB2 = kit.servo[1]
-            DIR2 = kit.servo[2]
             #ESC PWM assign
             ESC2.actuation_range = 180 
             ESC2.set_pulse_width_range(930,2300) #correct microsecond range for Turnigy 70A ESC
