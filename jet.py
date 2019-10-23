@@ -118,13 +118,13 @@ class Jet:
 
     def startup(self):
         self.rb_rq('down')
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.rb_rq('up')
 
         self.dir_rq(25)
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.dir_rq(-25)
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.dir_rq(0)
 
         self.th_rq(10)
