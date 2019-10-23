@@ -116,26 +116,20 @@ class Jet:
             print("Jet 1 set dir_rq: %s" %(angle))
     #--end dir_rq--
 
-    def startup():
-        Jet1.rb_rq('down')
+    def startup(self):
+        self.rb_rq('down')
         time.sleep(0.25)
-        Jet1.rb_rq('up')
-        Jet2.rb_rq('down')
-        time.sleep(0.25)
-        Jet2.rb_rq('up')
+        self.rb_rq('up')
 
-        Jet1.dir_rq(25)
-        Jet2.dir_rq(-25)
+        self.dir_rq(25)
         time.sleep(0.25)
-        Jet1.dir_rq(-25)
-        Jet2.dir_rq(25)
+        self.dir_rq(-25)
         time.sleep(0.25)
-        Jet1.dir_rq(0)
-        Jet2.dir_rq(0)
+        self.dir_rq(0)
 
-        Jet1.th_rq(10)
-        Jet2.th_rq(10)
+        self.th_rq(10)
         time.sleep(0.5)
+        self.th_rq(0)
 
 
 

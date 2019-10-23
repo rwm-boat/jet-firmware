@@ -9,6 +9,7 @@ def main():
     Jet2.zero()
 
     Jet1.startup()
+    Jet2.startup()
 
     while(True):
         for x in range(-25,25,1):
