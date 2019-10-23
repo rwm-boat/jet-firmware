@@ -107,11 +107,11 @@ class Jet:
         if self.port_jet: #port jet
             dir2PWM = 90 + DIR2_offset + angle
             DIR2.angle = dir2PWM
-            print("Jet 2 set dir_rq: %s" %(dir2PWM + angle))
+            print("Jet 2 set dir_rq: %s" %(angle))
         else:
             dir1PWM = 90 + DIR1_offset + angle
             DIR1.angle = dir1PWM
-            print("Jet 1 set dir_rq: %s" %(dir1PWM + angle))
+            print("Jet 1 set dir_rq: %s" %(angle))
     #--end dir_rq--
 
 
