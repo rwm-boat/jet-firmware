@@ -5,42 +5,21 @@ kit = ServoKit(channels=16)
 DIR1_offset = 0
 DIR2_offset = 0
 
-ESC1 = kit.servo[4]
-RB1 = kit.servo[5]
-DIR1 = kit.servo[6]
-
-ESC2 = kit.servo[0]
-RB2 = kit.servo[1]
-DIR2 = kit.servo[2]
+global ESC1
+global ESC2
+global RB1
+global RB2
+global DIR1
+global DIR2
 
 class Jet:
 
     def __init__(self, port_jet):
         self.port_jet = port_jet
         if port_jet == False: #Jet1 Starboard Jet
-            print("Starboard Jet Init")
-            
-        if port_jet == True: #Jet2 Port Jet
-            print("Port Jet Init")
-        
-    #--end Jet init--
-    
-    def setup(self):
-        if self.port_jet: #port jet
-            #ESC PWM assign
-            ESC2.actuation_range = 180 
-            ESC2.set_pulse_width_range(930,2300) #correct microsecond range for Turnigy 70A ESC
-            #RB PWM assign
-            RB2.actuation_range = 180
-            RB2.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
-            #DIR PWM assign
-            DIR2.actuation_range = 180
-            DIR2.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
-            self.th_rq(0)
-            self.rb_rq('up')
-            self.dir_rq(0)
-            print("Jet 2 (Port) ESC ARMED")
-        else:            #starboard jet
+            ESC1 = kit.servo[4]
+            RB1 = kit.servo[5]
+            DIR1 = kit.servo[6]
             #ESC PWM assign
             ESC1.actuation_range = 180 
             ESC1.set_pulse_width_range(930,2300) #correct microsecond range for Turnigy 70A ESC
@@ -50,13 +29,37 @@ class Jet:
             #DIR PWM assign
             DIR1.actuation_range = 180
             DIR1.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
+            print("Starboard Jet Init")
+            
+        if port_jet == True: #Jet2 Port Jet
+            ESC2 = kit.servo[0]
+            RB2 = kit.servo[1]
+            DIR2 = kit.servo[2]
+            #ESC PWM assign
+            ESC2.actuation_range = 180 
+            ESC2.set_pulse_width_range(930,2300) #correct microsecond range for Turnigy 70A ESC
+            #RB PWM assign
+            RB2.actuation_range = 180
+            RB2.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
+            #DIR PWM assign
+            DIR2.actuation_range = 180
+            DIR2.set_pulse_width_range(500, 2400) #correct microsecond range for DS3218mg servos
+            print("Port Jet Init")
+        
+    #--end Jet init--
+    
+    def setup(self):
+        if self.port_jet: #port jet
+            self.th_rq(0)
+            self.rb_rq('up')
+            self.dir_rq(0)
+            print("Jet 2 (Port) ESC ARMED")
+        else:            #starboard jet
             self.th_rq(0)
             self.rb_rq('up')
             self.dir_rq(0)
             print("Jet 1 (Starboard) ESC ARMED")
 
-        
-        
     #--end setup--
     
     def th_rq(self, mag):
