@@ -2,7 +2,9 @@ from adafruit_servokit import ServoKit
 import time
 kit = ServoKit(channels=16)
 
-DIR1_offset = 0
+#negative -> moves right
+#positive -> moves left
+DIR1_offset = -5
 DIR2_offset = 0
 
 ESC1 = kit.servo[4]
@@ -84,9 +86,9 @@ class Jet:
         if level == 'down':
             pos = 20
         if level == 'mid':
-            pos = 60
+            pos = 70
         if level == 'up':
-            pos = 100
+            pos = 130
         
         if self.port_jet: #port jet
             RB2.angle = pos
