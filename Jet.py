@@ -20,7 +20,6 @@ class Jet:
         if port_jet == False: #Jet1 Starboard Jet
             print("Starboard Jet Init")
             
-            
         if port_jet == True: #Jet2 Port Jet
             print("Port Jet Init")
         
@@ -56,7 +55,6 @@ class Jet:
             self.dir_rq(0)
             print("Jet 1 (Starboard) ESC ARMED")
 
-        time.sleep(5) #time for ESCs to arm
         
         
     #--end setup--
@@ -120,7 +118,12 @@ class Jet:
 
 def main():
     Jet1 = Jet(False)
+    Jet2 = Jet(True)
+
     Jet1.setup()
+    Jet2.setup()
+
+    Jet1.rb_rq('down')
 
 if __name__ == "__main__":
     main()
