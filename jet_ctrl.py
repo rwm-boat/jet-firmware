@@ -17,7 +17,7 @@ pack_voltage = 0
 speed_state = -1
 
 def calc_speed_state():
-    if cur_speed < 0.5 & jet1_current+jet2_current < 5:
+    if cur_speed < 0.5 and jet1_current+jet2_current < 5:
         speed_state = 0 #stopped
         print("speed_state: stopped")
     if 0.5 <= cur_speed < 7.5:
@@ -55,7 +55,7 @@ def on_vector_received(client, userdata, message):
     gps_course = float(obj["magnitude"])
 
     calc_speed_state() 
-    #trigger switch case
+    main_switch(speed_state)
 
 def main_switch(speed_state):
     switcher = {
@@ -63,7 +63,7 @@ def main_switch(speed_state):
         1: print("In Trolling State"),
         2: print("In On-Plane State")
     }
-    print switcher.get(speed_state, "Invalid Speed State")
+    print(switcher.get(speed_state, "Invalid Speed State"))
 
 def init_jets():
     Jet1 = Jet(False)
@@ -93,3 +93,6 @@ if __name__ == "__main__":
     init_jets()
 
     main()
+
+    Jet1.th_rq(10)
+    Jet1.rb_rq('down')
