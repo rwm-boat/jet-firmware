@@ -31,6 +31,11 @@ def temp_runner():
 		publish_temp_status()
 		time.sleep(1)
 
+def adc_runner():
+	while True:
+		publish_adc_status()
+		time.sleep(0.1)
+
 def publish_temp_status():
 		
 	global temp_f7
@@ -73,8 +78,6 @@ def publish_adc_status():
 thread = Thread(target=temp_runner)
 thread.start()
 
-while(True):
-	#publish_temp_status()
-	publish_adc_status()
-	time.sleep(0.1)
+thread2 = Thread(target=adc_runner)
+thread2.start()
 
