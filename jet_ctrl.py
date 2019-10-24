@@ -51,8 +51,11 @@ def on_gps_received(client, userdata, message):
     try:
         cur_speed = float(cur_speed)
         gps_course = float(gps_course)
+        print(cur_speed)
     except Exception:
         print("Invalid input from gps")
+        print(cur_speed)
+        print(gps_course)
 
 def on_vector_received(client, userdata, message):
     global target_heading
