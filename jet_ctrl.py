@@ -30,6 +30,7 @@ def on_vector_received(client, userdata, message):
 
 
 def main():
+    pass
     
 
     
@@ -47,13 +48,13 @@ if __name__ == "__main__":
 
     try:
         default_subscriptions = {
-            "/status/gps" : on_gps_received
+            "/status/gps" : on_gps_received,
             "/status/vector" : on_vector_received
         }
         subber = Subscriber(client_id="jet_ctrl_id", broker_ip="192.168.1.170", default_subscriptions=default_subscriptions)
         thread = Thread(target=subber.listen)
         thread.start()
     except Exception:
-        print("Subcribing to /gps or /vector failed") 
+        print("--!!Subcribing to /gps or /vector failed!!--") 
 
     main()

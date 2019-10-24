@@ -76,10 +76,10 @@ class Jet:
 
         if self.port_jet: #port jet
             ESC2.angle = vel
-            print("Jet 2 set th_rq: %s" %(vel))
+            print("Jet 2 set th_rq: %s" %(mag))
         else:             #stardboard jet
             ESC1.angle = vel
-            print("Jet 1 set th_rq: %s" %(vel))
+            print("Jet 1 set th_rq: %s" %(mag))
     #--end th_rq--
 
     def rb_rq(self,level):
