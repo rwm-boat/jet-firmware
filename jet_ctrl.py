@@ -21,7 +21,7 @@ Jet2 = Jet(True)
 
 def calc_speed_state():
     global speed_state
-    
+
     if cur_speed < 0.5 and jet1_current+jet2_current < 5:
         speed_state = 0 #stopped
         print("speed_state: stopped")
@@ -86,7 +86,8 @@ def main_switch(speed_state):
         1: trolling_state,
         2: onplane_state
     }
-    print(switcher.get(speed_state, "Invalid Speed State"))
+    func = switcher.get(speed_state, "Invalid Speed State")
+    func()
 
 def init_jets():
     
