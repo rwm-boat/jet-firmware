@@ -48,6 +48,11 @@ def on_gps_received(client, userdata, message):
     obj = json.loads(message.payload.decode('utf-8'))
     cur_speed = obj["speed"]
     gps_course = obj["course"]
+    try:
+        cur_speed = float(cur_speed)
+        gps_course = float(gps_course)
+    except Exception:
+        print("Invalid input from gps")
 
 def on_vector_received(client, userdata, message):
     global target_heading
