@@ -1,30 +1,59 @@
 from jet import Jet
-from jet_logging import *
+from jet_logging import * #this starts and runs the logging for the jets
+from mqtt_client.subscriber import Subscriber
+from threading import Thread
+import json
 import time
 
+#global varriables for subscriptions
+cur_speed = 0
+gps_course = 0
+target_heading = 0
+magnitude = 0
+
+def on_gps_received(client, userdata, message):
+    # create global variables for UI
+    global cur_speed
+    global gps_course
+    
+    obj = json.loads(message.payload.decode('utf-8'))
+    cur_speed = obj["speed"]
+    gps_course = obj["course"]
+
+def on_vector_received(client, userdata, message):
+    global target_heading
+    global magnitude
+
+    obj = json.loads(message.payload.decode('utf-8'))
+    target_heading = obj["heading"]
+    gps_course = obj["magnitude"]
+
+
 def main():
-    Jet1 = Jet(False)
-    Jet2 = Jet(True)
+    
 
-    Jet1.zero()
-    Jet2.zero()
-
-    while(True):
-        for x in range(-25,25,1):
-            Jet1.dir_rq(x)
-            Jet2.dir_rq(x)
-            time.sleep(0.1)
-        for y in range(25,-25,-1):
-            Jet1.dir_rq(y)
-            Jet2.dir_rq(y)
-            time.sleep(0.1)
-        Jet1.rb_rq('down')
-        Jet2.rb_rq('down')
-        time.sleep(1)
-        Jet1.rb_rq('up')
-        Jet2.rb_rq('up')
     
 
 
 if __name__ == "__main__":
+    Jet1 = Jet(False)
+    Jet2 = Jet(True)
+
+    Jet1.startup()
+    Jet2.startup()
+
+    Jet1.zero()
+    Jet2.zero()
+
+    try:
+        default_subscriptions = {
+            "/status/gps" : on_gps_received
+            "/status/vector" : on_vector_received
+        }
+        subber = Subscriber(client_id="jet_ctrl_id", broker_ip="192.168.1.170", default_subscriptions=default_subscriptions)
+        thread = Thread(target=subber.listen)
+        thread.start()
+    except Exception:
+        print("Subcribing to /gps or /vector failed") 
+
     main()

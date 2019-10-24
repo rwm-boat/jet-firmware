@@ -81,3 +81,5 @@ thread.start()
 thread2 = Thread(target=adc_runner)
 thread2.start()
 
+#this can go into a single thread once temp is put on its on adc
+
