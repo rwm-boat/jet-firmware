@@ -16,6 +16,9 @@ pack_voltage = 0
 
 speed_state = -1
 
+Jet1 = Jet(False)
+Jet2 = Jet(True)
+
 def calc_speed_state():
     if cur_speed < 0.5 and jet1_current+jet2_current < 5:
         speed_state = 0 #stopped
@@ -66,9 +69,7 @@ def main_switch(speed_state):
     print(switcher.get(speed_state, "Invalid Speed State"))
 
 def init_jets():
-    Jet1 = Jet(False)
-    Jet2 = Jet(True)
-
+    
     Jet1.startup()
     Jet2.startup()
 
