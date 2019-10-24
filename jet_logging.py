@@ -49,7 +49,7 @@ def publish_temp_status():
 			'jet2_temp': str(temp_f0),
 			'compartment_temp' : str(temp_b9)
 	}
-	print(message)
+	#print(message)
 	app_json = json.dumps(message)
 	pubber.publish("/status/temp",app_json)
 
@@ -64,11 +64,12 @@ def publish_adc_status():
 		'jet2_amps': jet2_amps,
 		'pack_voltage' : pack_voltage
 	}
-	print(json.dumps(message))
+	#print(json.dumps(message))
 	app_json = json.dumps(message)
 	pubber.publish("/status/adc",app_json)
 
 # MAIN METHOD
+
 thread = Thread(target=temp_runner)
 thread.start()
 

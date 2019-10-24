@@ -1,5 +1,5 @@
 from jet import Jet
-from jet-logging import publish_adc_status
+from jet_logging import *
 import time
 
 def main():
