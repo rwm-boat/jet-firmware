@@ -60,11 +60,20 @@ def on_vector_received(client, userdata, message):
     calc_speed_state() 
     main_switch(speed_state)
 
+def stopped_state():
+    print("State: Stopped")
+
+def trolling_state():
+    print("State: Trolling")
+
+def onplane_state():
+    print("State: On-Plane")
+
 def main_switch(speed_state):
     switcher = {
-        0: print("In Stopped State"),
-        1: print("In Trolling State"),
-        2: print("In On-Plane State")
+        0: stopped_state,
+        1: trolling_state,
+        2: onplane_state
     }
     print(switcher.get(speed_state, "Invalid Speed State"))
 
@@ -94,6 +103,3 @@ if __name__ == "__main__":
     init_jets()
 
     main()
-
-    Jet1.th_rq(10)
-    Jet1.rb_rq('down')
