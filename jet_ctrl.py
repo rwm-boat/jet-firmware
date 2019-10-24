@@ -46,8 +46,8 @@ def on_gps_received(client, userdata, message):
     global gps_course
     
     obj = json.loads(message.payload.decode('utf-8'))
-    cur_speed = float(obj["speed"])
-    gps_course = float(obj["course"])
+    cur_speed = obj["speed"]
+    gps_course = obj["course"]
 
 def on_vector_received(client, userdata, message):
     global target_heading
