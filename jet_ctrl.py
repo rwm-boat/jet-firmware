@@ -83,7 +83,7 @@ def main_switch(speed_state):
         1: trolling_state,
         2: onplane_state
     }
-    print(switcher.get(speed_state, "Invalid Speed State"))
+    print(switcher.get(speed_state, lambda: "Invalid Speed State"))
 
 def init_jets():
     
