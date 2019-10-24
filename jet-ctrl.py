@@ -1,5 +1,5 @@
 from jet import Jet
-import jet-logging
+from jet-logging import publish_adc_status
 import time
 
 def main():
@@ -23,6 +23,8 @@ def main():
         time.sleep(1)
         Jet1.rb_rq('up')
         Jet2.rb_rq('up')
+    
+
 
 if __name__ == "__main__":
     main()
