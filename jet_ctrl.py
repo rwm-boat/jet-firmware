@@ -80,7 +80,6 @@ def onplane_state():
     print("State: On-Plane")
 
 def main_switch(speed_state):
-    print(speed_state)
     switcher = {
         0: stopped_state,
         1: trolling_state,
