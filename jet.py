@@ -2,8 +2,8 @@ from adafruit_servokit import ServoKit
 import time
 kit = ServoKit(channels=16)
 
-#negative -> moves right
-#positive -> moves left
+#negative -> trim right
+#positive -> trim left
 DIR1_offset = -5
 DIR2_offset = 0
 
