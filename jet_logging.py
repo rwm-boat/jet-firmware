@@ -7,24 +7,32 @@ import os
 import glob
 from mqtt_client.publisher import Publisher
 import json
-from w1thermsensor import  W1ThermSensor
 from threading import Thread
 
 
-# Setup ADC Sensor
+# Setup Current Sensors
 i2c = busio.I2C(board.SCL, board.SDA)
 
-ads = ADS.ADS1115(i2c)
+ads = ADS.ADS1115(i2c, 0x48)
 ads.gain = 1
 chan = AnalogIn(ads, ADS.P0)
 chan2 = AnalogIn(ads,ADS.P1)
 chan3 = AnalogIn(ads, ADS.P2)
 
+# Setup Temperature Sensors
+ads_temp = ADS.ADS1115(i2c, 0x49)
+ads_temp.gain = 1
+jet1_in = AnalogIn(ads_temp, ADS.P0)
+jet2_in = AnalogIn(ads_temp, ADS.P1)
+compartment_in = AnalogIn(ads_temp, ADS.P2)
+
+# Temperature global variables
+jet1_temp = 0
+jet2_temp = 0
+compartment_temp = 0
+
 # Setup Pubber
 pubber = Publisher(client_id="jet-pubber")
-temp_f7 = 0
-temp_b9 = 0
-temp_f0 = 0
 
 def temp_runner():
 	while True:
@@ -38,23 +46,21 @@ def adc_runner():
 
 def publish_temp_status():
 		
-	global temp_f7
-	global temp_b9
-	global temp_f0
+	global jet1_temp
+	global compartment_temp
+	global jet2_temp
 
-	for sensor in W1ThermSensor.get_available_sensors():
-		if(sensor.id == "030197944df7"):
-			temp_f7 = sensor.get_temperature()
-		elif(sensor.id == "0307979401b9"):
-			temp_b9 = sensor.get_temperature()
-		else:
-			temp_f0 = sensor.get_temperature()
+	# convert input voltage in mV to temperature in centigrade
+	jet1_temp = ((jet1_in.voltage) - 500)/10
+	jet2_temp = ((jet2_in.voltage) - 500)/10
+	compartment_temp = ((compartment_in.voltage) - 500)/10
+	
 	message = {
-			'jet1_temp' : str(temp_f7),
-			'jet2_temp': str(temp_f0),
-			'compartment_temp' : str(temp_b9)
+			'jet1_temp' : str(jet1_temp),
+			'jet2_temp': str(jet2_temp),
+			'compartment_temp' : str(compartment_temp)
 	}
-	#print(message)
+	print(message)
 	app_json = json.dumps(message)
 	pubber.publish("/status/temp",app_json)
 
