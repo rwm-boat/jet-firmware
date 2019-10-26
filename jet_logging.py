@@ -51,9 +51,9 @@ def publish_temp_status():
 	global jet2_temp
 
 	# convert input voltage in mV to temperature in centigrade
-	jet1_temp = ((jet1_in.voltage) - 500)/10
-	jet2_temp = ((jet2_in.voltage) - 500)/10
-	compartment_temp = ((compartment_in.voltage) - 500)/10
+	jet1_temp = ((jet1_in.voltage * 1000) - 500)/10
+	jet2_temp = ((jet2_in.voltage * 1000) - 500)/10
+	compartment_temp = ((compartment_in.voltage * 1000) - 500)/10
 	
 	message = {
 			'jet1_temp' : str(jet1_temp),
