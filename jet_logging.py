@@ -35,9 +35,13 @@ compartment_temp = 0
 pubber = Publisher(client_id="jet-pubber")
 
 def log_temp_current():
-	publish_adc_status()
-	publish_temp_status()
-	time.sleep(.1)
+	try:
+		while True:
+			publish_adc_status()
+			publish_temp_status()
+			time.sleep(.1)
+	except Exception:
+		print("no temp or current sensors")
 
 def publish_temp_status():
 		
@@ -70,7 +74,7 @@ def publish_adc_status():
 		'jet2_amps': jet2_amps,
 		'pack_voltage' : pack_voltage
 	}
-	#print(json.dumps(message))
+	print(json.dumps(message))
 	app_json = json.dumps(message)
 	pubber.publish("/status/adc",app_json)
 
