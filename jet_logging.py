@@ -35,13 +35,13 @@ compartment_temp = 0
 pubber = Publisher(client_id="jet-pubber")
 
 def log_temp_current():
-	try:
-		while True:
+	while True:
+		try:
 			publish_adc_status()
 			publish_temp_status()
 			time.sleep(.1)
-	except Exception:
-		print("no temp or current sensors")
+		except Exception:
+			print("no temp or current sensors")
 
 def publish_temp_status():
 		
