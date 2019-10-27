@@ -34,15 +34,10 @@ compartment_temp = 0
 # Setup Pubber
 pubber = Publisher(client_id="jet-pubber")
 
-def temp_runner():
-	while True:
-		publish_temp_status()
-		time.sleep(1)
-
-def adc_runner():
-	while True:
-		publish_adc_status()
-		time.sleep(0.1)
+def log_temp_current():
+	publish_adc_status()
+	publish_temp_status()
+	time.sleep(.1)
 
 def publish_temp_status():
 		
@@ -81,11 +76,7 @@ def publish_adc_status():
 
 # MAIN METHOD
 
-thread = Thread(target=temp_runner)
+thread = Thread(target=log_temp_current)
 thread.start()
 
-thread2 = Thread(target=adc_runner)
-thread2.start()
-
-#this can go into a single thread once temp is put on its on adc
 
