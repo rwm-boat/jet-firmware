@@ -188,6 +188,5 @@ def main():
     
 if __name__ == "__main__":
 
-    init_jets()
-
     main()
+    init_jets()
