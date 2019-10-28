@@ -16,7 +16,7 @@ jet1_current = 0
 jet2_current = 0
 pack_voltage = 0
 
-speed_state = -1
+speed_state = 0
 heading_delta = 0
 go_straight = False
 turn = False
@@ -79,8 +79,9 @@ def on_vector_received(client, userdata, message):
 
 def calc_speed_state():
     global speed_state
-
-    if cur_speed < 0.4 and jet1_current + jet2_current > 5: #add current calculations to increase accuracy
+    print("Jet1 current = %s" %(jet1_current))
+    print("Jet2 current = %s" %(jet2_current))
+    if cur_speed < 0.4 and jet1_current + jet2_current < 8: #add current calculations to increase accuracy
         speed_state = 0 #stopped
         print("speed_state: stopped")
     if 0.4 <= cur_speed < 7.5:
