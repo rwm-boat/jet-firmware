@@ -18,8 +18,8 @@ pack_voltage = 0
 
 speed_state = 0
 heading_delta = 0
-go_straight = False
-turn = False
+
+follow_course = False
 
 course_degree_tolerence = 20
 
@@ -27,6 +27,7 @@ Jet1 = Jet(False)
 Jet2 = Jet(True)    
 
 heading_hold_pid = PID(1, 0.1, 0.05)
+dir_tune = 1
 
 def on_adc_received(client, userdata, message):
     global jet1_current
@@ -56,8 +57,7 @@ def on_vector_received(client, userdata, message):
     global target_heading
     global magnitude
     global heading_delta
-    global go_straight
-    global turn
+    global follow_course
 
     obj = json.loads(message.payload.decode('utf-8'))
     target_heading = float(obj["heading"])
@@ -68,12 +68,11 @@ def on_vector_received(client, userdata, message):
     calc_speed_state()
 
     heading_delta = target_heading - gps_course
-    if abs(heading_delta) < course_degree_tolerence:
-        turn = False
-        go_straight = True
-    if abs(heading_delta) > course_degree_tolerence:
-        go_straight = False
-        turn = True
+
+    if not magnitude == 0:
+        follow_course = True
+    else:
+        follow_course = False
 
     main_switch(speed_state)    
 
@@ -82,13 +81,13 @@ def calc_speed_state():
     print("Jet1 current = %s" %(jet1_current))
     print("Jet2 current = %s" %(jet2_current))
     print("Speed = %s" %(cur_speed))
-    if cur_speed < 0.4 and jet1_current + jet2_current < 5: #add current calculations to increase accuracy
+    if cur_speed < 0.4 and jet1_current + jet2_current < 5: 
         speed_state = 0 #stopped
         print("speed_state: stopped")
     if 0.4 <= cur_speed < 7.5 and jet1_current + jet2_current > 5:
         speed_state = 1 #trolling
         print("speed_state: trolling")
-    if 7.5 <= cur_speed:
+    if 7.5 <= cur_speed and jet1_current + jet2_current > 60:
         speed_state = 2 #on plane
         print("speed_state: on-plane")
     
@@ -113,48 +112,24 @@ def stopped_state():
         #this will loop until it's put in the trolling state
 
 def trolling_state():
-    global go_straight
-    global turn
+    global follow_course
 
     print("State: Trolling")
     Jet1.th_rq(magnitude*20) #change later to a speed target for trolling
     Jet2.th_rq(magnitude*20) #use pid to hit target speed, magnitude will corelate to target speed
     
-    while(go_straight):
+    while(follow_course):
         heading_delta = target_heading - gps_course
         if heading_delta > 0:
-            Jet1.dir_rq(-heading_delta/2)
-            Jet2.dir_rq(-heading_delta/2)
-            print("Go straight-- turn right %s degrees" %(heading_delta))
+            Jet1.dir_rq(-heading_delta*dir_tune)
+            Jet2.dir_rq(-heading_delta*dir_tune)
+            print("Follow Course-- turn right %s degrees" %(heading_delta))
         if heading_delta < 0:
-            Jet1.dir_rq(heading_delta/2)
-            Jet2.dir_rq(heading_delta/2)
-            print("Go straight-- turn left %s degrees" %(heading_delta))
-        heading_delta = target_heading - gps_course
-        if abs(heading_delta) > course_degree_tolerence:
-            go_straight = False
-            turn = True
-            main_switch(speed_state)
+            Jet1.dir_rq(heading_delta*dir_tune)
+            Jet2.dir_rq(heading_delta*dir_tune)
+            print("Follow Course-- turn left %s degrees" %(heading_delta))
         time.sleep(0.1)
     
-    while(turn):
-        heading_delta = target_heading - gps_course
-        if heading_delta > 0:
-            Jet1.dir_rq(-heading_delta)
-            Jet2.dir_rq(-heading_delta)
-            print("Turn-- right %s degrees" %(heading_delta))
-        if heading_delta < 0:
-            Jet1.dir_rq(heading_delta)
-            Jet2.dir_rq(heading_delta)
-            print("Turn-- left %s degrees" %(heading_delta))
-        heading_delta = target_heading - gps_course
-        if abs(heading_delta) < course_degree_tolerence:
-            turn = False
-            go_straight = True
-            main_switch(speed_state)
-        time.sleep(0.1)
-
-
 def onplane_state():
     print("State: On-Plane")
 
