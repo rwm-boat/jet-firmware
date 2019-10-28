@@ -29,9 +29,9 @@ try:
 	jet1_in = AnalogIn(ads_temp, ADS.P0)
 	jet2_in = AnalogIn(ads_temp, ADS.P1)
 	compartment_in = AnalogIn(ads_temp, ADS.P2)
-	
+
 except Exception:
-	print("No ADC's")
+	pass
 
 # Temperature global variables
 jet1_temp = 0
