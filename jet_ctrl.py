@@ -162,8 +162,8 @@ def main_switch(speed_state):
         1: trolling_state,
         2: onplane_state
     }
-    func = switcher.get(speed_state, "Invalid Speed State")
-    func()
+    function = switcher.get(speed_state, "Invalid Speed State")
+    function()
 
 def init_jets():
     
@@ -187,6 +187,7 @@ def main():
         print("--!!Subcribing to /gps or /vector failed!!--") 
     
 if __name__ == "__main__":
-
-    main()
+    
     init_jets()
+    main()
+    
