@@ -63,6 +63,8 @@ def on_vector_received(client, userdata, message):
     target_heading = float(obj["heading"])
     magnitude = float(obj["magnitude"])
 
+    heading_hold_pid.setpoint = target_heading
+
     calc_speed_state()
 
     heading_delta = target_heading - gps_course
@@ -102,9 +104,10 @@ def stopped_state():
     else:
         Jet1.th_rq(15)
         Jet2.th_rq(15)
-        calc_speed_state()
-        main_switch(speed_state) 
         print("Moving to acquire gps_course and gain speed")
+        # calc_speed_state()
+        # main_switch(speed_state) 
+        
         #this will loop until it's put in the trolling state
 
 def trolling_state():
