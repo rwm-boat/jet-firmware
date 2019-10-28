@@ -80,7 +80,7 @@ def on_vector_received(client, userdata, message):
 def calc_speed_state():
     global speed_state
 
-    if cur_speed < 0.4: #add current calculations to increase accuracy
+    if cur_speed < 0.4 and jet1_current + jet2_current < 5: #add current calculations to increase accuracy
         speed_state = 0 #stopped
         print("speed_state: stopped")
     if 0.4 <= cur_speed < 7.5:
