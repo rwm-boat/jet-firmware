@@ -69,6 +69,8 @@ def on_vector_received(client, userdata, message):
 
     heading_delta = target_heading - gps_course
     print("Vector Received")
+    print(target_heading)
+    print(gps_course)
 
     if not magnitude == 0:
         follow_course = True
@@ -116,6 +118,8 @@ def stopped_state():
 def trolling_state():
     global follow_course
     global heading_delta
+    global target_heading
+    global gps_course
 
     print("State: Trolling")
     # Jet1.th_rq(magnitude*20) #change later to a speed target for trolling
@@ -171,7 +175,5 @@ if __name__ == "__main__":
     init_jets()
     main()
 
-    main_thread = Thread(target=main_switch(speed_state))
-    main_thread.start()
 
     
