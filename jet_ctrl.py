@@ -81,6 +81,7 @@ def calc_speed_state():
     global speed_state
     print("Jet1 current = %s" %(jet1_current))
     print("Jet2 current = %s" %(jet2_current))
+    print("Speed = %s" %(cur_speed))
     if cur_speed < 0.4 and jet1_current + jet2_current < 8: #add current calculations to increase accuracy
         speed_state = 0 #stopped
         print("speed_state: stopped")
