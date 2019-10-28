@@ -121,12 +121,12 @@ def trolling_state():
     while(go_straight):
         heading_delta = target_heading - gps_course
         if heading_delta > 0:
-            Jet1.dir_rq(-heading_delta)
-            Jet2.dir_rq(-heading_delta)
+            Jet1.dir_rq(-heading_delta/2)
+            Jet2.dir_rq(-heading_delta/2)
             print("Go straight-- turn right %s degrees" %(heading_delta))
         if heading_delta < 0:
-            Jet1.dir_rq(heading_delta)
-            Jet2.dir_rq(heading_delta)
+            Jet1.dir_rq(heading_delta/2)
+            Jet2.dir_rq(heading_delta/2)
             print("Go straight-- turn left %s degrees" %(heading_delta))
         heading_delta = target_heading - gps_course
         if abs(heading_delta) > course_degree_tolerence:
@@ -137,12 +137,12 @@ def trolling_state():
     while(turn):
         heading_delta = target_heading - gps_course
         if heading_delta > 0:
-            Jet1.dir_rq(-heading_delta/2)
-            Jet2.dir_rq(-heading_delta/2)
+            Jet1.dir_rq(-heading_delta)
+            Jet2.dir_rq(-heading_delta)
             print("Turn-- right %s degrees" %(heading_delta))
         if heading_delta < 0:
-            Jet1.dir_rq(heading_delta/2)
-            Jet2.dir_rq(heading_delta/2)
+            Jet1.dir_rq(heading_delta)
+            Jet2.dir_rq(heading_delta)
             print("Turn-- left %s degrees" %(heading_delta))
         heading_delta = target_heading - gps_course
         if abs(heading_delta) < course_degree_tolerence:
