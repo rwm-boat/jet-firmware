@@ -3,6 +3,7 @@ from jet import Jet
 from jet_logging import * #this starts and runs the logging for the jets
 from mqtt_client.subscriber import Subscriber
 from threading import Thread
+from simple_pid import PID
 import json
 import time
 
@@ -24,6 +25,8 @@ course_degree_tolerence = 20
 
 Jet1 = Jet(False)
 Jet2 = Jet(True)    
+
+heading_hold_pid = PID(1, 0.1, 0.05)
 
 def on_adc_received(client, userdata, message):
     global jet1_current
@@ -109,8 +112,8 @@ def trolling_state():
     global turn
 
     print("State: Trolling")
-    Jet1.th_rq(magnitude) #change later to a speed target for trolling
-    Jet2.th_rq(magnitude) #use pid to hit target speed, magnitude will corelate to target speed
+    Jet1.th_rq(magnitude*20) #change later to a speed target for trolling
+    Jet2.th_rq(magnitude*20) #use pid to hit target speed, magnitude will corelate to target speed
     
     while(go_straight):
         heading_delta = target_heading - gps_course
@@ -131,12 +134,12 @@ def trolling_state():
     while(turn):
         heading_delta = target_heading - gps_course
         if heading_delta > 0:
-            Jet1.dir_rq(-heading_delta)
-            Jet2.dir_rq(-heading_delta)
+            Jet1.dir_rq(-heading_delta/2)
+            Jet2.dir_rq(-heading_delta/2)
             print("Turn-- right %s degrees" %(heading_delta))
         if heading_delta < 0:
-            Jet1.dir_rq(heading_delta)
-            Jet2.dir_rq(heading_delta)
+            Jet1.dir_rq(heading_delta/2)
+            Jet2.dir_rq(heading_delta/2)
             print("Turn-- left %s degrees" %(heading_delta))
         heading_delta = target_heading - gps_course
         if abs(heading_delta) < course_degree_tolerence:

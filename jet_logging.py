@@ -60,7 +60,7 @@ def publish_temp_status():
 			'jet2_temp': str(jet2_temp),
 			'compartment_temp' : str(compartment_temp)
 	}
-	print(message)
+	# print(message)
 	app_json = json.dumps(message)
 	pubber.publish("/status/temp",app_json)
 
@@ -75,7 +75,7 @@ def publish_adc_status():
 		'jet2_amps': jet2_amps,
 		'pack_voltage' : pack_voltage
 	}
-	print(json.dumps(message))
+	# print(json.dumps(message))
 	app_json = json.dumps(message)
 	pubber.publish("/status/adc",app_json)
 
