@@ -11,21 +11,27 @@ import json
 from threading import Thread
 
 
-# Setup Current Sensors
-i2c = busio.I2C(board.SCL, board.SDA)
 
-ads = ADS.ADS1115(i2c, address=0x48)
-ads.gain = 1
-chan = AnalogIn(ads, ADS.P0)
-chan2 = AnalogIn(ads,ADS.P1)
-chan3 = AnalogIn(ads, ADS.P2)
 
-# Setup Temperature Sensors
-ads_temp = ADS.ADS1115(i2c, address=0x49)
-ads_temp.gain = 1
-jet1_in = AnalogIn(ads_temp, ADS.P0)
-jet2_in = AnalogIn(ads_temp, ADS.P1)
-compartment_in = AnalogIn(ads_temp, ADS.P2)
+try:
+	# Setup Current Sensors
+	i2c = busio.I2C(board.SCL, board.SDA)
+
+	ads = ADS.ADS1115(i2c, address=0x48)
+	ads.gain = 1
+	chan = AnalogIn(ads, ADS.P0)
+	chan2 = AnalogIn(ads,ADS.P1)
+	chan3 = AnalogIn(ads, ADS.P2)
+
+	# Setup Temperature Sensors
+	ads_temp = ADS.ADS1115(i2c, address=0x49)
+	ads_temp.gain = 1
+	jet1_in = AnalogIn(ads_temp, ADS.P0)
+	jet2_in = AnalogIn(ads_temp, ADS.P1)
+	compartment_in = AnalogIn(ads_temp, ADS.P2)
+	
+except Exception:
+	print("No ADC's")
 
 # Temperature global variables
 jet1_temp = 0
