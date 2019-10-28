@@ -75,7 +75,7 @@ def on_vector_received(client, userdata, message):
     else:
         follow_course = False
 
-    main_switch(speed_state)    
+    # main_switch(speed_state)    
 
 def calc_speed_state():
     global speed_state
@@ -170,4 +170,8 @@ if __name__ == "__main__":
     
     init_jets()
     main()
+
+    main_thread = Thread(target=main_switch(speed_state))
+    main_thread.start()
+
     
