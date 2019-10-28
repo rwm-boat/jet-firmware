@@ -48,7 +48,7 @@ def log_temp_current():
 			publish_temp_status()
 			time.sleep(.1)
 		except Exception:
-			print("no temp or current sensors")
+			pass
 
 def publish_temp_status():
 		
