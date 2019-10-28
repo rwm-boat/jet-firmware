@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from jet import Jet
 from jet_logging import * #this starts and runs the logging for the jets
 from mqtt_client.subscriber import Subscriber
