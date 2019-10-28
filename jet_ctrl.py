@@ -133,6 +133,7 @@ def trolling_state():
             go_straight = False
             turn = True
             main_switch(speed_state)
+        time.sleep(0.1)
     
     while(turn):
         heading_delta = target_heading - gps_course
@@ -149,6 +150,7 @@ def trolling_state():
             turn = False
             go_straight = True
             main_switch(speed_state)
+        time.sleep(0.1)
 
 
 def onplane_state():
