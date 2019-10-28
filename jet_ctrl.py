@@ -82,10 +82,10 @@ def calc_speed_state():
     print("Jet1 current = %s" %(jet1_current))
     print("Jet2 current = %s" %(jet2_current))
     print("Speed = %s" %(cur_speed))
-    if cur_speed < 0.4 and jet1_current + jet2_current < 5: 
+    if cur_speed < 1.0 and jet1_current + jet2_current < 5: 
         speed_state = 0 #stopped
         print("speed_state: stopped")
-    if 0.4 <= cur_speed < 7.5 and jet1_current + jet2_current > 5:
+    if 1.0 <= cur_speed < 7.5 and 10 > 5: #jet1_current + jet2_current
         speed_state = 1 #trolling
         print("speed_state: trolling")
     if 7.5 <= cur_speed and jet1_current + jet2_current > 60:
