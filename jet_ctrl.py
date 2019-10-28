@@ -27,7 +27,7 @@ Jet1 = Jet(False)
 Jet2 = Jet(True)    
 
 heading_hold_pid = PID(1, 0.1, 0.05)
-dir_tune = 1
+dir_tune = 0.5
 
 def on_adc_received(client, userdata, message):
     global jet1_current
@@ -68,6 +68,7 @@ def on_vector_received(client, userdata, message):
     calc_speed_state()
 
     heading_delta = target_heading - gps_course
+    print("Vector Received")
 
     if not magnitude == 0:
         follow_course = True
@@ -103,8 +104,9 @@ def stopped_state():
         Jet1.th_rq(0)
         Jet2.th_rq(0)
     else:
-        Jet1.th_rq(15)
-        Jet2.th_rq(15)
+        # Jet1.th_rq(15)
+        # Jet2.th_rq(15)
+        print("Jets moving at 15")
         print("Moving to acquire gps_course and gain speed")
         # calc_speed_state()
         # main_switch(speed_state) 
@@ -113,11 +115,12 @@ def stopped_state():
 
 def trolling_state():
     global follow_course
+    global heading_delta
 
     print("State: Trolling")
-    Jet1.th_rq(magnitude*20) #change later to a speed target for trolling
-    Jet2.th_rq(magnitude*20) #use pid to hit target speed, magnitude will corelate to target speed
-    
+    # Jet1.th_rq(magnitude*20) #change later to a speed target for trolling
+    # Jet2.th_rq(magnitude*20) #use pid to hit target speed, magnitude will corelate to target speed
+    print("Jets moving at trolling speed")
     while(follow_course):
         heading_delta = target_heading - gps_course
         if heading_delta > 0:
