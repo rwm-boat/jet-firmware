@@ -87,10 +87,10 @@ def calc_speed_state():
     # print("Jet1 current = %s" %(jet1_current))
     # print("Jet2 current = %s" %(jet2_current))
     print("Speed = %s" %(cur_speed))
-    if cur_speed < 1.0 and jet1_current + jet2_current < 5: 
+    if cur_speed < 0.6 and jet1_current + jet2_current < 5: 
         speed_state = 0 #stopped
         print("speed_state: stopped")
-    if 1.0 <= cur_speed < 7.5 and 10 > 5: #jet1_current + jet2_current
+    if 0.6 <= cur_speed < 7.5 and jet1_current + jet2_current > 5: #jet1_current + jet2_current
         speed_state = 1 #trolling
         print("speed_state: trolling")
     if 7.5 <= cur_speed and jet1_current + jet2_current > 60:
@@ -109,14 +109,10 @@ def stopped_state():
         Jet1.th_rq(0)
         Jet2.th_rq(0)
     else:
-        # Jet1.th_rq(15)
-        # Jet2.th_rq(15)
-        print("Jets moving at 15")
+        Jet1.th_rq(15)
+        Jet2.th_rq(15)
+        # print("Jets moving at 15")
         print("Moving to acquire gps_course and gain speed")
-        # calc_speed_state()
-        # main_switch(speed_state) 
-        
-        #this will loop until it's put in the trolling state
 
 def trolling_state():
     global follow_course
@@ -125,9 +121,9 @@ def trolling_state():
     global gps_course
 
     print("State: Trolling")
-    # Jet1.th_rq(magnitude*20) #change later to a speed target for trolling
-    # Jet2.th_rq(magnitude*20) #use pid to hit target speed, magnitude will corelate to target speed
-    print("Jets moving at trolling speed")
+    Jet1.th_rq(magnitude*25) #change later to a speed target for trolling
+    Jet2.th_rq(magnitude*25) #use pid to hit target speed, magnitude will corelate to target speed
+    # print("Jets moving at trolling speed")
     
     heading_delta = target_heading - gps_course
 
@@ -137,14 +133,13 @@ def trolling_state():
         heading_delta = heading_delta - 360
 
     if heading_delta > 0: # turn right
+        print("Follow Course-- turn right %s degrees" %(heading_delta))
         Jet1.dir_rq(-heading_delta*dir_tune)
         Jet2.dir_rq(-heading_delta*dir_tune)
-        print("Follow Course-- turn right %s degrees" %(heading_delta))
     if heading_delta < 0: # turn left
+        print("Follow Course-- turn left %s degrees" %(abs(heading_delta)))
         Jet1.dir_rq(abs(heading_delta)*dir_tune)
         Jet2.dir_rq(abs(heading_delta)*dir_tune)
-        print("Follow Course-- turn left %s degrees" %(abs(heading_delta)))
-    
     
 def onplane_state():
     print("State: On-Plane")

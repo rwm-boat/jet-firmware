@@ -8,6 +8,8 @@ kit = ServoKit(channels=16)
 DIR1_offset = -5
 DIR2_offset = 0
 
+DIR_limit = 10
+
 ESC1 = kit.servo[4]
 RB1 = kit.servo[5]
 DIR1 = kit.servo[6]
@@ -100,11 +102,11 @@ class Jet:
     #--end rb_rq--
 
     def dir_rq(self,angle): #range is 25 to -25 degrees (phyiscally)
-        if angle > 25:
-            angle = 25
+        if angle > DIR_limit:
+            angle = DIR_limit
             #print("Director limited to 25")
-        if angle < -25:
-            angle = -25
+        if angle < -DIR_limit:
+            angle = -DIR_limit
             #print("Director limited to -25")
 
         if self.port_jet: #port jet
