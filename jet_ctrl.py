@@ -67,7 +67,7 @@ def on_vector_received(client, userdata, message):
 
     calc_speed_state()
 
-    heading_delta = target_heading - gps_course
+    # heading_delta = target_heading - gps_course
     print("Vector Received")
 
     if not magnitude == 0:
@@ -125,6 +125,12 @@ def trolling_state():
     print("Jets moving at trolling speed")
     
     heading_delta = target_heading - gps_course
+    
+    if heading_delta < 0 and abs(heading_delta) > 180:
+        heading_delta = 360 - abs(heading_delta)
+    if heading_delta > 0 and heading_delta > 180:
+        heading_delta = heading_delta - 360
+
     if heading_delta > 0:
         Jet1.dir_rq(-heading_delta*dir_tune)
         Jet2.dir_rq(-heading_delta*dir_tune)
