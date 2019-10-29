@@ -69,8 +69,6 @@ def on_vector_received(client, userdata, message):
 
     heading_delta = target_heading - gps_course
     print("Vector Received")
-    print(target_heading)
-    print(gps_course)
 
     if not magnitude == 0:
         follow_course = True
@@ -125,17 +123,17 @@ def trolling_state():
     # Jet1.th_rq(magnitude*20) #change later to a speed target for trolling
     # Jet2.th_rq(magnitude*20) #use pid to hit target speed, magnitude will corelate to target speed
     print("Jets moving at trolling speed")
-    while(follow_course):
-        heading_delta = target_heading - gps_course
-        if heading_delta > 0:
-            Jet1.dir_rq(-heading_delta*dir_tune)
-            Jet2.dir_rq(-heading_delta*dir_tune)
-            print("Follow Course-- turn right %s degrees" %(heading_delta))
-        if heading_delta < 0:
-            Jet1.dir_rq(heading_delta*dir_tune)
-            Jet2.dir_rq(heading_delta*dir_tune)
-            print("Follow Course-- turn left %s degrees" %(heading_delta))
-        time.sleep(0.1)
+    
+    heading_delta = target_heading - gps_course
+    if heading_delta > 0:
+        Jet1.dir_rq(-heading_delta*dir_tune)
+        Jet2.dir_rq(-heading_delta*dir_tune)
+        print("Follow Course-- turn right %s degrees" %(heading_delta))
+    if heading_delta < 0:
+        Jet1.dir_rq(heading_delta*dir_tune)
+        Jet2.dir_rq(heading_delta*dir_tune)
+        print("Follow Course-- turn left %s degrees" %(heading_delta))
+    
     
 def onplane_state():
     print("State: On-Plane")
@@ -157,6 +155,11 @@ def init_jets():
     Jet1.zero()
     Jet2.zero()
 
+def main_switch_runner():
+    while(True):
+        main_switch(speed_state)
+        time.sleep(0.1)
+
 def main():
     try:
         default_subscriptions = {
@@ -174,6 +177,9 @@ if __name__ == "__main__":
     
     init_jets()
     main()
+
+    main_thread = Thread(target=main_switch_runner())
+    main_thread.start()
 
 
     
