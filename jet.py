@@ -102,10 +102,10 @@ class Jet:
     def dir_rq(self,angle): #range is 25 to -25 degrees (phyiscally)
         if angle > 25:
             angle = 25
-            # print("Director limited to 25")
+            #print("Director limited to 25")
         if angle < -25:
             angle = -25
-            # print("Director limited to -25")
+            #print("Director limited to -25")
 
         if self.port_jet: #port jet
             dir2PWM = 90 + DIR2_offset + angle

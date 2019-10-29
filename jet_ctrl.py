@@ -84,8 +84,8 @@ def on_vector_received(client, userdata, message):
 
 def calc_speed_state():
     global speed_state
-    print("Jet1 current = %s" %(jet1_current))
-    print("Jet2 current = %s" %(jet2_current))
+    # print("Jet1 current = %s" %(jet1_current))
+    # print("Jet2 current = %s" %(jet2_current))
     print("Speed = %s" %(cur_speed))
     if cur_speed < 1.0 and jet1_current + jet2_current < 5: 
         speed_state = 0 #stopped
@@ -136,14 +136,14 @@ def trolling_state():
     if heading_delta > 0 and heading_delta > 180:
         heading_delta = heading_delta - 360
 
-    if heading_delta > 0:
+    if heading_delta > 0: # turn right
         Jet1.dir_rq(-heading_delta*dir_tune)
         Jet2.dir_rq(-heading_delta*dir_tune)
         print("Follow Course-- turn right %s degrees" %(heading_delta))
-    if heading_delta < 0:
-        Jet1.dir_rq(heading_delta*dir_tune)
-        Jet2.dir_rq(heading_delta*dir_tune)
-        print("Follow Course-- turn left %s degrees" %(heading_delta))
+    if heading_delta < 0: # turn left
+        Jet1.dir_rq(abs(heading_delta)*dir_tune)
+        Jet2.dir_rq(abs(heading_delta)*dir_tune)
+        print("Follow Course-- turn left %s degrees" %(abs(heading_delta)))
     
     
 def onplane_state():
@@ -186,7 +186,7 @@ def main():
     
 if __name__ == "__main__":
     
-    init_jets()
+    # init_jets()
     main()
 
     main_thread = Thread(target=main_switch_runner())
