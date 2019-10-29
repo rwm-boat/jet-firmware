@@ -10,7 +10,7 @@ import time
 #global varriables
 cur_speed = 0
 gps_course = 0
-target_heading = 0
+target_heading = -1
 magnitude = 0
 jet1_current = 0
 jet2_current = 0
@@ -70,6 +70,11 @@ def on_vector_received(client, userdata, message):
     # heading_delta = target_heading - gps_course
     print("Vector Received")
 
+    if target_heading == 0 and magnitude == 0:
+        print("Waypoint hit")
+        main_switch(0)
+
+
     if not magnitude == 0:
         follow_course = True
     else:
@@ -125,7 +130,7 @@ def trolling_state():
     print("Jets moving at trolling speed")
     
     heading_delta = target_heading - gps_course
-    
+
     if heading_delta < 0 and abs(heading_delta) > 180:
         heading_delta = 360 - abs(heading_delta)
     if heading_delta > 0 and heading_delta > 180:
