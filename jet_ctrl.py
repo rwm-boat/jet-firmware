@@ -87,10 +87,10 @@ def calc_speed_state():
     # print("Jet1 current = %s" %(jet1_current))
     # print("Jet2 current = %s" %(jet2_current))
     print("Speed = %s" %(cur_speed))
-    if cur_speed < 0.6 and jet1_current + jet2_current < 5: 
+    if cur_speed < 0.4 and jet1_current + jet2_current < 5: 
         speed_state = 0 #stopped
         print("speed_state: stopped")
-    if 0.6 <= cur_speed < 7.5 and jet1_current + jet2_current > 5: #jet1_current + jet2_current
+    if 0.4 <= cur_speed < 7.5 and jet1_current + jet2_current > 5: #jet1_current + jet2_current
         speed_state = 1 #trolling
         print("speed_state: trolling")
     if 7.5 <= cur_speed and jet1_current + jet2_current > 60:
@@ -141,6 +141,10 @@ def trolling_state():
         Jet1.dir_rq(abs(heading_delta)*dir_tune)
         Jet2.dir_rq(abs(heading_delta)*dir_tune)
     
+    time.sleep(0.5)
+    Jet1.dir_rq(0)
+    Jet2.dir_rq(0)
+    
 def onplane_state():
     print("State: On-Plane")
 
@@ -164,7 +168,7 @@ def init_jets():
 def main_switch_runner():
     while(True):
         main_switch(speed_state)
-        time.sleep(0.1)
+        time.sleep(1)
 
 def main():
     try:

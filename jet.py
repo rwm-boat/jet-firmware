@@ -8,7 +8,7 @@ kit = ServoKit(channels=16)
 DIR1_offset = -5
 DIR2_offset = 0
 
-DIR_limit = 10
+DIR_limit = 25
 
 ESC1 = kit.servo[4]
 RB1 = kit.servo[5]
