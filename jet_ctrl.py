@@ -264,8 +264,8 @@ if __name__ == "__main__":
     main_thread = Thread(target=execute_runner)
     
     heading_delta_thread.start()
-    speed_ctrl_thread.start()
-    main_thread.start()
+    # speed_ctrl_thread.start()
+    # main_thread.start()
 
 
     
