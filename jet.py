@@ -3,10 +3,10 @@ from adafruit_servokit import ServoKit
 import time
 kit = ServoKit(channels=16)
 
-#negative -> trim right
-#positive -> trim left
-DIR1_offset = -5
-DIR2_offset = 0
+#positive -> trim right
+#negative -> trim left
+DIR1_offset = 4
+DIR2_offset = -1
 
 DIR_limit = 25
 
@@ -109,12 +109,13 @@ class Jet:
             angle = -DIR_limit
             #print("Director limited to -25")
 
+        #PWM negative goes right, so I negate it to make it follow the compass sign
         if self.port_jet: #port jet
-            dir2PWM = 90 + DIR2_offset + angle
+            dir2PWM = 90 + DIR2_offset + (-angle)
             DIR2.angle = dir2PWM
             print("Jet 2 set dir_rq: %s" %(angle))
         else:
-            dir1PWM = 90 + DIR1_offset + angle
+            dir1PWM = 90 + DIR1_offset + (-angle)
             DIR1.angle = dir1PWM
             print("Jet 1 set dir_rq: %s" %(angle))
     #--end dir_rq--

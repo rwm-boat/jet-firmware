@@ -6,28 +6,52 @@ from threading import Thread
 from simple_pid import PID
 import json
 import time
+import numpy as np 
+
 
 #global varriables
-cur_speed = 0
+gps_speed = 0
 gps_course = 0
 target_heading = -1
 magnitude = 0
 jet1_current = 0
 jet2_current = 0
 pack_voltage = 0
+mag_compass = 0
 
 speed_state = 0
 heading_delta = 0
+heading_delta_avg = 0
+HD_AVG_N = 20
 
-follow_course = False
+KD_SPEED = 10
+th_request = 0
 
-course_degree_tolerence = 20
+SLOW_SPEED = 1.0
+TROLL_SPEED = 2.2
+HULL_SPEED = 4.5
+MIN_PLANE_SPEED = 8.0
+MAX_SPEED = 11.0
+
+turn = False
+go_straight = False
+
+STRAIGHT_TURN_TOL = 60
 
 Jet1 = Jet(False)
 Jet2 = Jet(True)    
 
-heading_hold_pid = PID(1, 0.1, 0.05)
-dir_tune = 0.5
+KD_DIR = 0.5
+
+def on_compass_received(client, userdata, message):
+    global mag_compass
+    obj = json.loads(message.payload.decode('utf-8'))
+    mag_compass = obj['compass']
+
+    try:
+        mag_compass = float(mag_compass)
+    except Exception:
+        print("Invalid Compass Reading")
 
 def on_adc_received(client, userdata, message):
     global jet1_current
@@ -40,15 +64,14 @@ def on_adc_received(client, userdata, message):
     pack_voltage = float(obj['pack_voltage'])
 
 def on_gps_received(client, userdata, message):
-    # create global variables for UI
-    global cur_speed
+    global gps_speed
     global gps_course
     
     obj = json.loads(message.payload.decode('utf-8'))
-    cur_speed = obj["speed"]
+    gps_speed = obj["speed"]
     gps_course = obj["course"]
     try:
-        cur_speed = float(cur_speed)
+        gps_speed = float(gps_speed)
         gps_course = float(gps_course)
     except Exception:
         print("Invalid input from gps")
@@ -56,123 +79,158 @@ def on_gps_received(client, userdata, message):
 def on_vector_received(client, userdata, message):
     global target_heading
     global magnitude
-    global heading_delta
-    global follow_course
 
     obj = json.loads(message.payload.decode('utf-8'))
     target_heading = float(obj["heading"])
     magnitude = float(obj["magnitude"])
-
-    heading_hold_pid.setpoint = target_heading
-
-    calc_speed_state()
-
-    # heading_delta = target_heading - gps_course
     print("Vector Received")
 
     if target_heading == 0 and magnitude == 0:
         print("Waypoint hit")
-        main_switch(0)
+        #TODO
+        # What is the boat going to do when waypoint is hit 
 
+def calc_heading_delta():
+    global heading_delta
+    global heading_delta_avg
+    
+    heading_delta = target_heading - gps_course
 
-    if not magnitude == 0:
-        follow_course = True
+    #Fixes 360 errors
+    if heading_delta < 0 and abs(heading_delta) > 180:
+        heading_delta = 360 - abs(heading_delta)
+    if heading_delta > 0 and heading_delta > 180:
+        heading_delta = heading_delta - 360
+    #Positive heading_delta means turn right
+    #Negative heading_delta means turn left
+
+    heading_cumsum = np.cumsum(np.insert(heading_delta, 0, 0))
+    heading_delta_avg = (heading_cumsum[HD_AVG_N:] - heading_cumsum[:-HD_AVG_N]) / float(HD_AVG_N)
+
+    # print("Target Heading = %s" %(target_heading))
+    print("GPS Course  = %s" %(gps_course))
+    print("Mag Compass = %s" %(mag_compass))
+    # print("Heading Delta = %s" %(heading_delta))
+    # print("Heading Delta AVG = %s" %(heading_delta_avg))
+
+def speed_ctrl():
+    global th_request
+    target_speed = 0
+
+    if magnitude == 0: target_speed = 0
+    if magnitude == 1: target_speed = SLOW_SPEED
+    if magnitude == 2: target_speed = TROLL_SPEED 
+    if magnitude == 3: target_speed = HULL_SPEED
+    if magnitude == 4: target_speed = MIN_PLANE_SPEED
+    if magnitude == 5: target_speed = MAX_SPEED
+
+    if round(gps_speed, 1) > target_speed - 0.15 and round(gps_speed, 1) < target_speed + 0.15:
+        Jet1.th_rq(th_request)
+        Jet2.th_rq(th_request)
     else:
-        follow_course = False
+        e_speed = target_speed - round(gps_speed, 1)
+        th_change = KD_SPEED * e_speed
+        th_request += th_change
 
-    # main_switch(speed_state)    
+        Jet1.th_rq(th_request)
+        Jet2.th_rq(th_request)
+    
+    calc_speed_state()
+
 
 def calc_speed_state():
     global speed_state
-    # print("Jet1 current = %s" %(jet1_current))
-    # print("Jet2 current = %s" %(jet2_current))
-    print("Speed = %s" %(cur_speed))
-    if cur_speed < 0.4 and jet1_current + jet2_current < 5: 
+
+    print("Speed = %s" %(gps_speed))
+    if gps_speed < 0.3 and jet1_current + jet2_current < 5: 
         speed_state = 0 #stopped
         print("speed_state: stopped")
-    if 0.4 <= cur_speed < 7.5 and jet1_current + jet2_current > 5: #jet1_current + jet2_current
+    if 0.3 <= gps_speed < 7.5 and jet1_current + jet2_current > 5: #jet1_current + jet2_current
         speed_state = 1 #trolling
         print("speed_state: trolling")
-    if 7.5 <= cur_speed and jet1_current + jet2_current > 60:
+    if 7.5 <= gps_speed and jet1_current + jet2_current > 60:
         speed_state = 2 #on plane
         print("speed_state: on-plane")
     
     if magnitude == 0:
         speed_state = 0
 
-def stopped_state():
-    print("State: Stopped")
-    #for now, when we get a new vector while stopped,
-    #we will drive straight slowly until a gps_course is 
-    #accuratly aquired
-    if magnitude == 0:
-        Jet1.th_rq(0)
-        Jet2.th_rq(0)
-    else:
-        Jet1.th_rq(15)
-        Jet2.th_rq(15)
-        # print("Jets moving at 15")
-        print("Moving to acquire gps_course and gain speed")
 
-def trolling_state():
-    global follow_course
-    global heading_delta
-    global target_heading
-    global gps_course
+def execute():
+    global turn
+    global go_straight
 
-    print("State: Trolling")
-    Jet1.th_rq(magnitude*25) #change later to a speed target for trolling
-    Jet2.th_rq(magnitude*25) #use pid to hit target speed, magnitude will corelate to target speed
-    # print("Jets moving at trolling speed")
-    
-    heading_delta = target_heading - gps_course
+    # if abs(heading_delta) < STRAIGHT_TURN_TOL:
+    #     turn = False
+    #     go_straight = True
+    if abs(heading_delta) > STRAIGHT_TURN_TOL:
+        go_straight = False
+        turn = True
 
-    if heading_delta < 0 and abs(heading_delta) > 180:
-        heading_delta = 360 - abs(heading_delta)
-    if heading_delta > 0 and heading_delta > 180:
-        heading_delta = heading_delta - 360
+    if go_straight:
+        if heading_delta_avg > 10: # go right
+            print("Go Straight++ %s degrees" %(heading_delta_avg))
+            Jet1.dir_rq(heading_delta_avg*KD_DIR)
+            Jet2.dir_rq(heading_delta_avg*KD_DIR)
 
-    if heading_delta > 0: # turn right
-        print("Follow Course-- turn right %s degrees" %(heading_delta))
-        Jet1.dir_rq(-heading_delta*dir_tune)
-        Jet2.dir_rq(-heading_delta*dir_tune)
-    if heading_delta < 0: # turn left
-        print("Follow Course-- turn left %s degrees" %(abs(heading_delta)))
-        Jet1.dir_rq(abs(heading_delta)*dir_tune)
-        Jet2.dir_rq(abs(heading_delta)*dir_tune)
-    
-    time.sleep(0.5)
-    Jet1.dir_rq(0)
-    Jet2.dir_rq(0)
-    
-def onplane_state():
-    print("State: On-Plane")
+            time.sleep(abs(heading_delta_avg)/20)
+            Jet1.dir_rq(0)
+            Jet2.dir_rq(0)
+        elif heading_delta_avg < -10: # go left
+            print("Go Straight-- %s degrees" %(heading_delta_avg))
+            Jet1.dir_rq(heading_delta_avg*KD_DIR)
+            Jet2.dir_rq(heading_delta_avg*KD_DIR)
 
-def main_switch(speed_state):
-    switcher = {
-        0: stopped_state,
-        1: trolling_state,
-        2: onplane_state
-    }
-    function = switcher.get(speed_state, "Invalid Speed State")
-    function()
-
-def init_jets():
-    
-    Jet1.startup()
-    Jet2.startup()
-
-    Jet1.zero()
-    Jet2.zero()
-
-def main_switch_runner():
-    while(True):
-        main_switch(speed_state)
+            time.sleep(abs(heading_delta_avg)/20)
+            Jet1.dir_rq(0)
+            Jet2.dir_rq(0)
+        else:
+            Jet1.dir_rq(0)
+            Jet2.dir_rq(0)
+        
         time.sleep(1)
+           
+    
+    if turn:
+        turn_amount = heading_delta
+        mag_home = mag_compass
+        mag_target = mag_home + turn_amount
+
+        if turn_amount > 0: #turn right
+            while mag_compass < mag_target - 10:
+                Jet1.dir_rq(mag_target-mag_compass)
+                Jet2.dir_rq(mag_target-mag_compass)
+            Jet1.dir_rq(0)
+            Jet2.dir_rq(0)
+            turn = False
+        
+        if turn_amount < 0: #turn left
+            while mag_compass > mag_target + 10:
+                Jet1.dir_rq(mag_target-mag_compass)
+                Jet2.dir_rq(mag_target-mag_compass)
+            Jet1.dir_rq(0)
+            Jet2.dir_rq(0)
+            turn = False
+
+def execute_runner():
+    while(True):
+        execute()
+        time.sleep(0.1)
+
+def calc_heading_delta_runner():
+    while(True):
+        calc_heading_delta()
+        time.sleep(0.1)
+
+def speed_ctrl_runner():
+    while(True):
+        speed_ctrl()
+        time.sleep(1.0)
 
 def main():
     try:
         default_subscriptions = {
+            "/status/compass": on_compass_received,
             "/status/gps" : on_gps_received,
             "/status/vector" : on_vector_received,
             "/status/adc" :on_adc_received
@@ -181,14 +239,21 @@ def main():
         thread = Thread(target=subber.listen)
         thread.start()
     except Exception:
-        print("--!!Subcribing to /gps or /vector failed!!--") 
+        print("--!!Subcribing to /gps or /vector or /adc failed!!--") 
     
 if __name__ == "__main__":
     
-    # init_jets()
+    Jet1.zero()
+    Jet2.zero()
+
     main()
 
-    main_thread = Thread(target=main_switch_runner())
+    heading_delta_thread = Thread(target=calc_heading_delta_runner())
+    speed_ctrl_thread = Thread(target=speed_ctrl_runner())
+    main_thread = Thread(target=execute_runner())
+    
+    heading_delta_thread.start()
+    speed_ctrl_thread.start()
     main_thread.start()
 
 
