@@ -94,6 +94,7 @@ def on_vector_received(client, userdata, message):
 def calc_heading_delta():
     global heading_delta
     global heading_delta_avg
+    global hd_array
     
     heading_delta = target_heading - gps_course
 
@@ -110,6 +111,7 @@ def calc_heading_delta():
     else:
         del hd_array[-1]
         hd_array.append(heading_delta)
+    print(hd_array)
     heading_delta_avg = sum(hd_array)/len(hd_array)
     
     # print("Target Heading = %s" %(target_heading))
