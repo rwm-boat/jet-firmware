@@ -6,7 +6,7 @@ from threading import Thread
 from simple_pid import PID
 import json
 import time
-# import numpy as np 
+import numpy as np 
 
 
 #global varriables
@@ -104,14 +104,14 @@ def calc_heading_delta():
     #Positive heading_delta means turn right
     #Negative heading_delta means turn left
 
-    # heading_cumsum = np.cumsum(np.insert(heading_delta, 0, 0))
-    # heading_delta_avg = (heading_cumsum[HD_AVG_N:] - heading_cumsum[:-HD_AVG_N]) / float(HD_AVG_N)
+    heading_cumsum = np.cumsum(np.insert(heading_delta, 0, 0))
+    heading_delta_avg = (heading_cumsum[HD_AVG_N:] - heading_cumsum[:-HD_AVG_N]) / float(HD_AVG_N)
 
     # print("Target Heading = %s" %(target_heading))
-    print("GPS Course  = %s" %(gps_course))
-    print("Mag Compass = %s" %(mag_compass))
-    # print("Heading Delta = %s" %(heading_delta))
-    # print("Heading Delta AVG = %s" %(heading_delta_avg))
+    # print("GPS Course  = %s" %(gps_course))
+    # print("Mag Compass = %s" %(mag_compass))
+    print("Heading Delta = %s" %(heading_delta))
+    print("Heading Delta AVG = %s" %(heading_delta_avg))
 
 def speed_ctrl():
     global th_request
@@ -127,6 +127,7 @@ def speed_ctrl():
     if round(gps_speed, 1) > target_speed - 0.15 and round(gps_speed, 1) < target_speed + 0.15:
         Jet1.th_rq(th_request)
         Jet2.th_rq(th_request)
+        print("--Boat at reuested speed--")
     else:
         e_speed = target_speed - round(gps_speed, 1)
         th_change = KD_SPEED * e_speed
@@ -134,8 +135,9 @@ def speed_ctrl():
 
         Jet1.th_rq(th_request)
         Jet2.th_rq(th_request)
+        print("--Boat getting to speed--")
     
-    calc_speed_state()
+    # calc_speed_state()
 
 
 def calc_speed_state():
@@ -159,6 +161,7 @@ def calc_speed_state():
 def execute():
     global turn
     global go_straight
+    print("Execute")
 
     # if abs(heading_delta) < STRAIGHT_TURN_TOL:
     #     turn = False
@@ -195,6 +198,10 @@ def execute():
         turn_amount = heading_delta
         mag_home = mag_compass
         mag_target = mag_home + turn_amount
+        if mag_target < 0:
+            mag_target = mag_target + 360
+        if mag_target > 360:
+            mag_target = mag_target - 360
 
         if turn_amount > 0: #turn right
             while mag_compass < mag_target - 10:
