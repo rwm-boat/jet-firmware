@@ -104,8 +104,10 @@ def calc_heading_delta():
     #Positive heading_delta means turn right
     #Negative heading_delta means turn left
 
-    heading_cumsum = np.cumsum(np.insert(heading_delta, 0, 0))
-    heading_delta_avg = (heading_cumsum[HD_AVG_N:] - heading_cumsum[:-HD_AVG_N]) / float(HD_AVG_N)
+    # heading_cumsum = np.cumsum(np.insert(heading_delta, 0, 0))
+    # heading_delta_avg = (heading_cumsum[HD_AVG_N:] - heading_cumsum[:-HD_AVG_N]) / float(HD_AVG_N)
+
+    heading_delta_avg = np.convolve(heading_delta, np.ones((HD_AVG_N,))/HD_AVG_N, mode='valid')
 
     # print("Target Heading = %s" %(target_heading))
     # print("GPS Course  = %s" %(gps_course))
@@ -161,7 +163,6 @@ def calc_speed_state():
 def execute():
     global turn
     global go_straight
-    print("Execute")
 
     # if abs(heading_delta) < STRAIGHT_TURN_TOL:
     #     turn = False
