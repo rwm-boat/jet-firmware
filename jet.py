@@ -66,6 +66,7 @@ class Jet:
             mag = 100
             print("Throttle mag limited to 100")
         if mag < 0:
+            mag = 0
             print("Throttle mag needs to be positive")
 
         vel = ((mag)*18)/10 #converts mag into a pwm value

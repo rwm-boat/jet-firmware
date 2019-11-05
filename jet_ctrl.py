@@ -43,6 +43,7 @@ Jet1 = Jet(False)
 Jet2 = Jet(True)    
 
 KD_DIR = 0.5
+speed_PID = PID(10,1,0.1)
 
 def on_compass_received(client, userdata, message):
     global mag_compass
@@ -122,28 +123,32 @@ def calc_heading_delta():
 def speed_ctrl():
     global th_request
     target_speed = 0
-
+    
     if magnitude == 0: target_speed = 0
     if magnitude == 1: target_speed = SLOW_SPEED
     if magnitude == 2: target_speed = TROLL_SPEED 
     if magnitude == 3: target_speed = HULL_SPEED
     if magnitude == 4: target_speed = MIN_PLANE_SPEED
     if magnitude == 5: target_speed = MAX_SPEED
+    
+    Jet1.th_rq(magnitude*12)
+    Jet2.th_rq(magnitude*12)
 
-    if round(gps_speed, 1) > target_speed - 0.15 and round(gps_speed, 1) < target_speed + 0.15:
-        Jet1.th_rq(th_request)
-        Jet2.th_rq(th_request)
-        print("--Boat at reuested speed--")
-    else:
-        e_speed = target_speed - round(gps_speed, 1)
-        th_change = KD_SPEED * e_speed
-        th_request += th_change
-        if target_speed < HULL_SPEED and th_request > 50:
-            th_request = 50
-            print("Limited throttle to 50")
-        Jet1.th_rq(th_request)
-        Jet2.th_rq(th_request)
-        print("--Boat getting to speed--")
+
+    # if round(gps_speed, 1) > target_speed - 0.2 and round(gps_speed, 1) < target_speed + 0.2:
+    #     Jet1.th_rq(th_request)
+    #     Jet2.th_rq(th_request)
+    #     print("--Boat at requested speed--")
+    # else:
+    #     e_speed = target_speed - round(gps_speed, 1)
+    #     th_change = KD_SPEED * e_speed
+    #     th_request += th_change
+    #     if target_speed < HULL_SPEED and th_request > 50:
+    #         th_request = 50
+    #         print("Limited throttle to 50")
+    #     Jet1.th_rq(th_request)
+    #     Jet2.th_rq(th_request)
+    #     print("--Boat getting to speed--")
     
     # calc_speed_state()
 
@@ -173,6 +178,8 @@ def execute():
     # if abs(heading_delta) < STRAIGHT_TURN_TOL:
     #     turn = False
     #     go_straight = True
+
+    go_straight = True
     if abs(heading_delta_avg) > STRAIGHT_TURN_TOL:
         go_straight = False
         turn = True
@@ -205,6 +212,7 @@ def execute():
         turn_amount = heading_delta
         mag_home = mag_compass
         mag_target = mag_home + turn_amount
+        
         if mag_target < 0:
             mag_target = mag_target + 360
         if mag_target > 360:
@@ -217,6 +225,7 @@ def execute():
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
             turn = False
+            go_straight = True
         
         if turn_amount < 0: #turn left
             while mag_compass > mag_target + 10:
@@ -225,6 +234,7 @@ def execute():
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
             turn = False
+            go_straight = True
 
 def execute_runner():
     while(True):
@@ -239,7 +249,7 @@ def calc_heading_delta_runner():
 def speed_ctrl_runner():
     while(True):
         speed_ctrl()
-        time.sleep(1.0)
+        time.sleep(1)
 
 def main():
     try:
