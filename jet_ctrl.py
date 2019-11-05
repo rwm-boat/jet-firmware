@@ -178,7 +178,7 @@ def calc_speed_state():
 def execute():
     global turn
     global go_straight
-    print("Execute")
+    
 
     # if abs(heading_delta) < STRAIGHT_TURN_TOL:
     #     turn = False
@@ -286,7 +286,7 @@ if __name__ == "__main__":
     
     heading_delta_thread.start()
     speed_ctrl_thread.start()
-    # main_thread.start()
+    main_thread.start()
 
 
     
