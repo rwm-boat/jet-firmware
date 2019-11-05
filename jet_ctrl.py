@@ -105,14 +105,12 @@ def calc_heading_delta():
     #Positive heading_delta means turn right
     #Negative heading_delta means turn left
 
-    # heading_cumsum = np.cumsum(np.insert(heading_delta, 0, 0))
-    # heading_delta_avg = (heading_cumsum[HD_AVG_N:] - heading_cumsum[:-HD_AVG_N]) / float(HD_AVG_N)
-    if length(hd_array) < HD_AVG_N:
+    if len(hd_array) < HD_AVG_N:
         hd_array.append(heading_delta)
     else:
         del hd_array[-1]
         hd_array.append(heading_delta)
-    heading_delta_avg = sum(hd_array)/length(hd_array)
+    heading_delta_avg = sum(hd_array)/len(hd_array)
     
     # print("Target Heading = %s" %(target_heading))
     # print("GPS Course  = %s" %(gps_course))
