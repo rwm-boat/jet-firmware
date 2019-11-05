@@ -90,6 +90,11 @@ def on_vector_received(client, userdata, message):
         #TODO
         # What is the boat going to do when waypoint is hit 
 
+def moving_average(values, window):
+    weights = np.repeat(1.0, window)/window
+    sma = np.convolve(values, weights, 'valid')
+    return sma
+
 def calc_heading_delta():
     global heading_delta
     global heading_delta_avg
@@ -107,7 +112,7 @@ def calc_heading_delta():
     # heading_cumsum = np.cumsum(np.insert(heading_delta, 0, 0))
     # heading_delta_avg = (heading_cumsum[HD_AVG_N:] - heading_cumsum[:-HD_AVG_N]) / float(HD_AVG_N)
 
-    heading_delta_avg = np.convolve(heading_delta, np.ones((HD_AVG_N,))/HD_AVG_N, mode='valid')
+    heading_delta_avg = moving_average(heading_delta, HD_AVG_N)
 
     # print("Target Heading = %s" %(target_heading))
     # print("GPS Course  = %s" %(gps_course))
