@@ -109,9 +109,8 @@ def calc_heading_delta():
     if len(hd_array) < HD_AVG_N:
         hd_array.append(heading_delta)
     else:
-        del hd_array[-1]
+        del hd_array[0]
         hd_array.append(heading_delta)
-    print(hd_array)
     heading_delta_avg = sum(hd_array)/len(hd_array)
     
     # print("Target Heading = %s" %(target_heading))
@@ -172,7 +171,7 @@ def execute():
     # if abs(heading_delta) < STRAIGHT_TURN_TOL:
     #     turn = False
     #     go_straight = True
-    if abs(heading_delta) > STRAIGHT_TURN_TOL:
+    if abs(heading_delta_avg) > STRAIGHT_TURN_TOL:
         go_straight = False
         turn = True
 
@@ -266,7 +265,7 @@ if __name__ == "__main__":
     main_thread = Thread(target=execute_runner)
     
     heading_delta_thread.start()
-    # speed_ctrl_thread.start()
+    speed_ctrl_thread.start()
     # main_thread.start()
 
 
