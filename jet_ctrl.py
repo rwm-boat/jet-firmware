@@ -41,11 +41,12 @@ go_straight = False
 GO_STRAIGHT_HOLD = 20 #scalar
 STRAIGHT_TURN_TOL = 60 #degrees
 TURN_TOL = 15 #degrees
+KD_DIR = 0.5
 
 Jet1 = Jet(False)
 Jet2 = Jet(True)    
 
-KD_DIR = 0.5
+
 speed_PID = PID(10,1,0.1)
 
 def on_compass_received(client, userdata, message):
@@ -120,7 +121,7 @@ def calc_heading_delta():
     # print("Target Heading = %s" %(target_heading))
     # print("GPS Course  = %s" %(gps_course))
     # print("Mag Compass = %s" %(mag_compass))
-    print("Heading Delta = %s" %(heading_delta))
+    # print("Heading Delta = %s" %(heading_delta))
     print("Heading Delta AVG = %s" %(heading_delta_avg))
 
 def speed_ctrl():
@@ -212,7 +213,7 @@ def execute():
            
     
     if turn:
-        turn_amount = heading_delta
+        turn_amount = heading_delta_avg
         mag_home = mag_compass
         mag_target = mag_home + turn_amount
 
@@ -223,8 +224,9 @@ def execute():
 
         if turn_amount > 0: #turn right
             while mag_compass < mag_target - TURN_TOL:
-                Jet1.dir_rq(mag_target-mag_compass)
-                Jet2.dir_rq(mag_target-mag_compass)
+                Jet1.dir_rq((mag_target-mag_compass)*KD_DIR)
+                Jet2.dir_rq((mag_target-mag_compass)*KD_DIR)
+                print("Turning Right %s" %(mag_target-mag_compass)))
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
             turn = False
@@ -232,8 +234,9 @@ def execute():
         
         if turn_amount < 0: #turn left
             while mag_compass > mag_target + TURN_TOL:
-                Jet1.dir_rq(mag_target-mag_compass)
-                Jet2.dir_rq(mag_target-mag_compass)
+                Jet1.dir_rq((mag_target-mag_compass)*KD_DIR)
+                Jet2.dir_rq((mag_target-mag_compass)*KD_DIR)
+                print("Turning Left %s" %(mag_target-mag_compass)))
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
             turn = False
