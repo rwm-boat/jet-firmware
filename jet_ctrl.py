@@ -138,7 +138,9 @@ def speed_ctrl():
         e_speed = target_speed - round(gps_speed, 1)
         th_change = KD_SPEED * e_speed
         th_request += th_change
-
+        if target_speed < HULL_SPEED and th_request > 50:
+            th_request = 50
+            print("Limited throttle to 50")
         Jet1.th_rq(th_request)
         Jet2.th_rq(th_request)
         print("--Boat getting to speed--")
