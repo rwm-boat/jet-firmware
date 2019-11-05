@@ -255,9 +255,9 @@ if __name__ == "__main__":
 
     main()
 
-    heading_delta_thread = Thread(target=calc_heading_delta_runner())
-    speed_ctrl_thread = Thread(target=speed_ctrl_runner())
-    main_thread = Thread(target=execute_runner())
+    heading_delta_thread = Thread(target=calc_heading_delta_runner)
+    speed_ctrl_thread = Thread(target=speed_ctrl_runner)
+    main_thread = Thread(target=execute_runner)
     
     heading_delta_thread.start()
     speed_ctrl_thread.start()
