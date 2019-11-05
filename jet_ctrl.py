@@ -37,7 +37,10 @@ MAX_SPEED = 11.0
 turn = False
 go_straight = False
 
-STRAIGHT_TURN_TOL = 60
+
+GO_STRAIGHT_HOLD = 20 #scalar
+STRAIGHT_TURN_TOL = 60 #degrees
+TURN_TOL = 15 #degrees
 
 Jet1 = Jet(False)
 Jet2 = Jet(True)    
@@ -185,20 +188,20 @@ def execute():
         turn = True
 
     if go_straight:
-        if heading_delta_avg > 10: # go right
-            print("Go Straight++ %s degrees" %(heading_delta_avg))
-            Jet1.dir_rq(heading_delta_avg*KD_DIR)
-            Jet2.dir_rq(heading_delta_avg*KD_DIR)
+        if heading_delta_avg > 10: # need to go left
+            print("Go Straight-- %s degrees" %(-heading_delta_avg))
+            Jet1.dir_rq(-heading_delta_avg*KD_DIR)
+            Jet2.dir_rq(-heading_delta_avg*KD_DIR)
 
-            time.sleep(abs(heading_delta_avg)/20)
+            time.sleep(abs(heading_delta_avg)/GO_STRAIGHT_HOLD)
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
-        elif heading_delta_avg < -10: # go left
-            print("Go Straight-- %s degrees" %(heading_delta_avg))
+        elif heading_delta_avg < -10: # need to go right
+            print("Go Straight++ %s degrees" %(-heading_delta_avg))
             Jet1.dir_rq(heading_delta_avg*KD_DIR)
             Jet2.dir_rq(heading_delta_avg*KD_DIR)
 
-            time.sleep(abs(heading_delta_avg)/20)
+            time.sleep(abs(heading_delta_avg)/GO_STRAIGHT_HOLD)
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
         else:
@@ -212,14 +215,14 @@ def execute():
         turn_amount = heading_delta
         mag_home = mag_compass
         mag_target = mag_home + turn_amount
-        
+
         if mag_target < 0:
             mag_target = mag_target + 360
         if mag_target > 360:
             mag_target = mag_target - 360
 
         if turn_amount > 0: #turn right
-            while mag_compass < mag_target - 10:
+            while mag_compass < mag_target - TURN_TOL:
                 Jet1.dir_rq(mag_target-mag_compass)
                 Jet2.dir_rq(mag_target-mag_compass)
             Jet1.dir_rq(0)
@@ -228,7 +231,7 @@ def execute():
             go_straight = True
         
         if turn_amount < 0: #turn left
-            while mag_compass > mag_target + 10:
+            while mag_compass > mag_target + TURN_TOL:
                 Jet1.dir_rq(mag_target-mag_compass)
                 Jet2.dir_rq(mag_target-mag_compass)
             Jet1.dir_rq(0)
@@ -239,7 +242,7 @@ def execute():
 def execute_runner():
     while(True):
         execute()
-        time.sleep(0.1)
+        time.sleep(0.2)
 
 def calc_heading_delta_runner():
     while(True):
