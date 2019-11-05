@@ -190,16 +190,16 @@ def execute():
         turn = True
 
     if go_straight:
-        if heading_delta_avg > 10: # need to go left
-            print("Go Straight-- %s degrees" %(-heading_delta_avg))
-            Jet1.dir_rq(-heading_delta_avg*KD_DIR)
-            Jet2.dir_rq(-heading_delta_avg*KD_DIR)
+        if heading_delta_avg > 10: # need to go right
+            print("Go Straight++ %s degrees" %(heading_delta_avg))
+            Jet1.dir_rq(heading_delta_avg*KD_DIR)
+            Jet2.dir_rq(heading_delta_avg*KD_DIR)
 
             time.sleep(abs(heading_delta_avg)/GO_STRAIGHT_HOLD)
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
-        elif heading_delta_avg < -10: # need to go right
-            print("Go Straight++ %s degrees" %(-heading_delta_avg))
+        elif heading_delta_avg < -10: # need to go left
+            print("Go Straight-- %s degrees" %(heading_delta_avg))
             Jet1.dir_rq(heading_delta_avg*KD_DIR)
             Jet2.dir_rq(heading_delta_avg*KD_DIR)
 
@@ -212,7 +212,6 @@ def execute():
         
         time.sleep(1)
            
-    
     if turn:
         print("Starting Turn")
         turn_amount = heading_delta_avg
@@ -229,6 +228,7 @@ def execute():
                 Jet1.dir_rq((mag_target-mag_compass)*KD_DIR)
                 Jet2.dir_rq((mag_target-mag_compass)*KD_DIR)
                 print("Turning Right %s" %(mag_target-mag_compass))
+                time.sleep(0.2)
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
             turn = False
@@ -239,6 +239,7 @@ def execute():
                 Jet1.dir_rq((mag_target-mag_compass)*KD_DIR)
                 Jet2.dir_rq((mag_target-mag_compass)*KD_DIR)
                 print("Turning Left %s" %(mag_target-mag_compass))
+                time.sleep(0.2)
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
             turn = False
