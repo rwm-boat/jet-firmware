@@ -116,7 +116,7 @@ def calc_heading_delta():
     else:
         del hd_array[0]
         hd_array.append(heading_delta)
-    heading_delta_avg = sum(hd_array)/len(hd_array)
+    heading_delta_avg = round(sum(hd_array)/len(hd_array),1)
     
     # print("Target Heading = %s" %(target_heading))
     # print("GPS Course  = %s" %(gps_course))
@@ -178,6 +178,7 @@ def calc_speed_state():
 def execute():
     global turn
     global go_straight
+    print("Execute")
 
     # if abs(heading_delta) < STRAIGHT_TURN_TOL:
     #     turn = False
@@ -213,6 +214,7 @@ def execute():
            
     
     if turn:
+        print("Starting Turn")
         turn_amount = heading_delta_avg
         mag_home = mag_compass
         mag_target = mag_home + turn_amount
@@ -226,7 +228,7 @@ def execute():
             while mag_compass < mag_target - TURN_TOL:
                 Jet1.dir_rq((mag_target-mag_compass)*KD_DIR)
                 Jet2.dir_rq((mag_target-mag_compass)*KD_DIR)
-                print("Turning Right %s" %(mag_target-mag_compass)))
+                print("Turning Right %s" %(mag_target-mag_compass))
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
             turn = False
@@ -236,7 +238,7 @@ def execute():
             while mag_compass > mag_target + TURN_TOL:
                 Jet1.dir_rq((mag_target-mag_compass)*KD_DIR)
                 Jet2.dir_rq((mag_target-mag_compass)*KD_DIR)
-                print("Turning Left %s" %(mag_target-mag_compass)))
+                print("Turning Left %s" %(mag_target-mag_compass))
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
             turn = False
