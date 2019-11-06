@@ -22,10 +22,7 @@ mag_compass = 0
 speed_state = 0
 heading_delta = 0
 heading_delta_avg = 0
-HD_AVG_N = 20
-hd_array = []
 
-KD_SPEED = 10
 th_request = 0
 
 SLOW_SPEED = 1.0
@@ -34,20 +31,21 @@ HULL_SPEED = 4.5
 MIN_PLANE_SPEED = 8.0
 MAX_SPEED = 11.0
 
+hd_array = []
 turn = False
 go_straight = False
 
-
-GO_STRAIGHT_HOLD = 20 #scalar
-STRAIGHT_TURN_TOL = 60 #degrees
-TURN_TOL = 15 #degrees
-KD_DIR = 0.5
+KD_SPEED = 10
+MVING_AVG_N = 30 # heading_delta moving average count
+GO_STRAIGHT_HOLD = 20 # scalar (_delta / go_straight_hold)
+STRAIGHT_TURN_TOL = 70 # degrees 
+GO_STRAIGHT_LOOP_SPEED = 1 # seconds
+KD_DIR = 0.5 # DIR tune
+TURN_TOL = 15 # degrees
 
 Jet1 = Jet(False)
 Jet2 = Jet(True)    
 
-
-speed_PID = PID(10,1,0.1)
 
 def on_compass_received(client, userdata, message):
     global mag_compass
@@ -103,15 +101,14 @@ def calc_heading_delta():
     
     heading_delta = target_heading - gps_course
 
-    #Fixes 360 errors
+    # Fixes 360 errors (_delta is saying to turn left or right 180 degrees)
+    # -90 turn left, 90 turn right
     if heading_delta < 0 and abs(heading_delta) > 180:
         heading_delta = 360 - abs(heading_delta)
     if heading_delta > 0 and heading_delta > 180:
         heading_delta = heading_delta - 360
-    #Positive heading_delta means turn right
-    #Negative heading_delta means turn left
 
-    if len(hd_array) < HD_AVG_N:
+    if len(hd_array) < MVING_AVG_N:
         hd_array.append(heading_delta)
     else:
         del hd_array[0]
@@ -122,7 +119,7 @@ def calc_heading_delta():
     # print("GPS Course  = %s" %(gps_course))
     # print("Mag Compass = %s" %(mag_compass))
     # print("Heading Delta = %s" %(heading_delta))
-    print("Heading Delta AVG = %s" %(heading_delta_avg))
+    # print("Heading Delta AVG = %s" %(heading_delta_avg))
 
 def speed_ctrl():
     global th_request
@@ -137,24 +134,6 @@ def speed_ctrl():
     
     Jet1.th_rq(magnitude*12)
     Jet2.th_rq(magnitude*12)
-
-
-    # if round(gps_speed, 1) > target_speed - 0.2 and round(gps_speed, 1) < target_speed + 0.2:
-    #     Jet1.th_rq(th_request)
-    #     Jet2.th_rq(th_request)
-    #     print("--Boat at requested speed--")
-    # else:
-    #     e_speed = target_speed - round(gps_speed, 1)
-    #     th_change = KD_SPEED * e_speed
-    #     th_request += th_change
-    #     if target_speed < HULL_SPEED and th_request > 50:
-    #         th_request = 50
-    #         print("Limited throttle to 50")
-    #     Jet1.th_rq(th_request)
-    #     Jet2.th_rq(th_request)
-    #     print("--Boat getting to speed--")
-    
-    # calc_speed_state()
 
 
 def calc_speed_state():
@@ -179,7 +158,6 @@ def execute():
     global turn
     global go_straight
     
-
     # if abs(heading_delta) < STRAIGHT_TURN_TOL:
     #     turn = False
     #     go_straight = True
@@ -190,6 +168,7 @@ def execute():
         turn = True
 
     if go_straight:
+
         if heading_delta_avg > 10: # need to go right
             print("Go Straight++ %s degrees" %(heading_delta_avg))
             Jet1.dir_rq(heading_delta_avg*KD_DIR)
@@ -198,6 +177,7 @@ def execute():
             time.sleep(abs(heading_delta_avg)/GO_STRAIGHT_HOLD)
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
+
         elif heading_delta_avg < -10: # need to go left
             print("Go Straight-- %s degrees" %(heading_delta_avg))
             Jet1.dir_rq(heading_delta_avg*KD_DIR)
@@ -206,11 +186,12 @@ def execute():
             time.sleep(abs(heading_delta_avg)/GO_STRAIGHT_HOLD)
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
+
         else:
             Jet1.dir_rq(0)
             Jet2.dir_rq(0)
         
-        time.sleep(1)
+        time.sleep(GO_STRAIGHT_LOOP_SPEED)
            
     if turn:
         print("Starting Turn")
