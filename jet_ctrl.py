@@ -18,10 +18,10 @@ jet1_current = 0
 jet2_current = 0
 pack_voltage = 0
 mag_compass = 0
+filtered_compass = 0
 
 speed_state = 0
 heading_delta = 0
-heading_delta_avg = 0
 
 th_request = 0
 
@@ -31,10 +31,7 @@ HULL_SPEED = 4.5
 MIN_PLANE_SPEED = 8.0
 MAX_SPEED = 11.0
 
-hd_array = []
-turn = False
-go_straight = False
-
+Kp = 1/7
 KD_SPEED = 10
 MVING_AVG_N = 30 # heading_delta moving average count
 GO_STRAIGHT_HOLD = 20 # scalar (_delta / go_straight_hold)
@@ -49,8 +46,11 @@ Jet2 = Jet(True)
 
 def on_compass_received(client, userdata, message):
     global mag_compass
+    global filtered_compass
+
     obj = json.loads(message.payload.decode('utf-8'))
     mag_compass = obj['compass']
+    filtered_compass = obj['kalman_lp']
 
     try:
         mag_compass = float(mag_compass)
@@ -94,12 +94,12 @@ def on_vector_received(client, userdata, message):
         #TODO
         # What is the boat going to do when waypoint is hit 
 
+## -------------------------------------------------------------------------------##
+
 def calc_heading_delta():
     global heading_delta
-    global heading_delta_avg
-    global hd_array
     
-    heading_delta = target_heading - gps_course
+    heading_delta = target_heading - filtered_compass
 
     # Fixes 360 errors (_delta is saying to turn left or right 180 degrees)
     # -90 turn left, 90 turn right
@@ -107,19 +107,11 @@ def calc_heading_delta():
         heading_delta = 360 - abs(heading_delta)
     if heading_delta > 0 and heading_delta > 180:
         heading_delta = heading_delta - 360
-
-    if len(hd_array) < MVING_AVG_N:
-        hd_array.append(heading_delta)
-    else:
-        del hd_array[0]
-        hd_array.append(heading_delta)
-    heading_delta_avg = round(sum(hd_array)/len(hd_array),1)
     
     # print("Target Heading = %s" %(target_heading))
     # print("GPS Course  = %s" %(gps_course))
     # print("Mag Compass = %s" %(mag_compass))
-    # print("Heading Delta = %s" %(heading_delta))
-    # print("Heading Delta AVG = %s" %(heading_delta_avg))
+    print("Heading Delta = %s" %(heading_delta))
 
 def speed_ctrl():
     global th_request
@@ -132,8 +124,13 @@ def speed_ctrl():
     if magnitude == 4: target_speed = MIN_PLANE_SPEED
     if magnitude == 5: target_speed = MAX_SPEED
     
-    Jet1.th_rq(magnitude*12)
-    Jet2.th_rq(magnitude*12)
+    request = magnitude*15
+
+    if abs(heading_delta) > 90:
+        request = 15
+    
+    Jet1.th_rq(request)
+    Jet2.th_rq(request)
 
 
 def calc_speed_state():
@@ -155,76 +152,17 @@ def calc_speed_state():
 
 
 def execute():
-    global turn
-    global go_straight
+    # Heading_delta is coming in
+    # If h_d is positive, turn right, which is a pos dir_rq
+    # if h_d is negative, turn left, which is a neg dir_rq
+
+    dir_request = Kp * heading_delta
     
-    # if abs(heading_delta) < STRAIGHT_TURN_TOL:
-    #     turn = False
-    #     go_straight = True
-
-    go_straight = True
-    if abs(heading_delta_avg) > STRAIGHT_TURN_TOL:
-        go_straight = False
-        turn = True
-
-    if go_straight:
-
-        if heading_delta_avg > 10: # need to go right
-            print("Go Straight++ %s degrees" %(heading_delta_avg))
-            Jet1.dir_rq(heading_delta_avg*KD_DIR)
-            Jet2.dir_rq(heading_delta_avg*KD_DIR)
-
-            time.sleep(abs(heading_delta_avg)/GO_STRAIGHT_HOLD)
-            Jet1.dir_rq(0)
-            Jet2.dir_rq(0)
-
-        elif heading_delta_avg < -10: # need to go left
-            print("Go Straight-- %s degrees" %(heading_delta_avg))
-            Jet1.dir_rq(heading_delta_avg*KD_DIR)
-            Jet2.dir_rq(heading_delta_avg*KD_DIR)
-
-            time.sleep(abs(heading_delta_avg)/GO_STRAIGHT_HOLD)
-            Jet1.dir_rq(0)
-            Jet2.dir_rq(0)
-
-        else:
-            Jet1.dir_rq(0)
-            Jet2.dir_rq(0)
-        
-        time.sleep(GO_STRAIGHT_LOOP_SPEED)
+    Jet1.dir_rq(dir_request)
+    Jet2.dir_rq(dir_request)
            
-    if turn:
-        print("Starting Turn")
-        turn_amount = heading_delta_avg
-        mag_home = mag_compass
-        mag_target = mag_home + turn_amount
-
-        if mag_target < 0:
-            mag_target = mag_target + 360
-        if mag_target > 360:
-            mag_target = mag_target - 360
-
-        if turn_amount > 0: #turn right
-            while mag_compass < mag_target - TURN_TOL:
-                Jet1.dir_rq((mag_target-mag_compass)*KD_DIR)
-                Jet2.dir_rq((mag_target-mag_compass)*KD_DIR)
-                print("Turning Right %s" %(mag_target-mag_compass))
-                time.sleep(0.2)
-            Jet1.dir_rq(0)
-            Jet2.dir_rq(0)
-            turn = False
-            go_straight = True
+    
         
-        if turn_amount < 0: #turn left
-            while mag_compass > mag_target + TURN_TOL:
-                Jet1.dir_rq((mag_target-mag_compass)*KD_DIR)
-                Jet2.dir_rq((mag_target-mag_compass)*KD_DIR)
-                print("Turning Left %s" %(mag_target-mag_compass))
-                time.sleep(0.2)
-            Jet1.dir_rq(0)
-            Jet2.dir_rq(0)
-            turn = False
-            go_straight = True
 
 def execute_runner():
     while(True):
