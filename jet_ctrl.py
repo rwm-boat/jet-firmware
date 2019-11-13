@@ -31,7 +31,7 @@ HULL_SPEED = 4.5
 MIN_PLANE_SPEED = 8.0
 MAX_SPEED = 11.0
 
-Kp = 1/7
+Kp = 1/6
 KD_SPEED = 10
 MVING_AVG_N = 30 # heading_delta moving average count
 GO_STRAIGHT_HOLD = 20 # scalar (_delta / go_straight_hold)
@@ -129,8 +129,8 @@ def speed_ctrl():
     if abs(heading_delta) > 90:
         request = 15
     
-    Jet1.th_rq(request)
-    Jet2.th_rq(request)
+    # Jet1.th_rq(request)
+    # Jet2.th_rq(request)
 
 
 def calc_speed_state():

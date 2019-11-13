@@ -5,7 +5,7 @@ kit = ServoKit(channels=16)
 
 #positive -> trim right
 #negative -> trim left
-DIR1_offset = 4
+DIR1_offset = 5
 DIR2_offset = -1
 
 DIR_limit = 25
