@@ -22,6 +22,7 @@ filtered_compass = 0
 
 speed_state = 0
 heading_delta = 0
+old_heading_delta = 0
 
 th_request = 0
 
@@ -31,7 +32,8 @@ HULL_SPEED = 4.5
 MIN_PLANE_SPEED = 8.0
 MAX_SPEED = 11.0
 
-Kp = 1/6
+Kp = 0.3
+Kd = 0.01
 KD_SPEED = 10
 MVING_AVG_N = 30 # heading_delta moving average count
 GO_STRAIGHT_HOLD = 20 # scalar (_delta / go_straight_hold)
@@ -155,9 +157,12 @@ def execute():
     # Heading_delta is coming in
     # If h_d is positive, turn right, which is a pos dir_rq
     # if h_d is negative, turn left, which is a neg dir_rq
+    global old_heading_delta
 
-    dir_request = Kp * heading_delta
-    
+    dir_request = Kp * heading_delta + Kd * ((heading_delta - old_heading_delta)/.1)
+
+    old_heading_delta = heading_delta    
+
     Jet1.dir_rq(dir_request)
     Jet2.dir_rq(dir_request)
            
