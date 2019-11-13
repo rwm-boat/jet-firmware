@@ -101,7 +101,7 @@ def on_vector_received(client, userdata, message):
 def calc_heading_delta():
     global heading_delta
     
-    heading_delta = target_heading - filtered_compass
+    heading_delta = 90 - filtered_compass
 
     # Fixes 360 errors (_delta is saying to turn left or right 180 degrees)
     # -90 turn left, 90 turn right
@@ -113,7 +113,7 @@ def calc_heading_delta():
     # print("Target Heading = %s" %(target_heading))
     # print("GPS Course  = %s" %(gps_course))
     # print("Mag Compass = %s" %(mag_compass))
-    print("Heading Delta = %s" %(heading_delta))
+    # print("Heading Delta = %s" %(heading_delta))
 
 def speed_ctrl():
     global th_request
@@ -160,7 +160,7 @@ def execute():
     global old_heading_delta
 
     dir_request = Kp * heading_delta + Kd * ((heading_delta - old_heading_delta)/.1)
-
+    dir_request = round(dir_request, 2)
     old_heading_delta = heading_delta    
 
     Jet1.dir_rq(dir_request)
