@@ -21,7 +21,7 @@ mag_compass = 0
 filtered_compass = 0
 
 speed_state = 0
-heading_delta = 0
+heading_delta = 0.0
 old_heading_delta = 0
 
 th_request = 0
@@ -160,7 +160,7 @@ def execute():
     global old_heading_delta
 
     dir_request = Kp * heading_delta + Kd * ((heading_delta - old_heading_delta)/.1)
-    dir_request = round(dir_request, 2)
+    dir_request = int(dir_request)
     old_heading_delta = heading_delta    
 
     Jet1.dir_rq(dir_request)
