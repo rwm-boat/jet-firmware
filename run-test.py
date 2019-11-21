@@ -70,11 +70,21 @@ print("Tare done! Add weight now...")
 while True:
 	try:
 		jet_amps = ((adc_current.voltage - 2.47) / 0.013)
-		val = hx.get_weight(5)
-		print("Grams Thrust: ", val, "  Jet Current: ", jet_amps)
-		# hx.power_down()
-		# hx.power_up()
+		jet_thrust = hx.get_weight(5)
+		print("Grams Thrust: ", round(jet_thrust,3), "  Jet Current: ", round(jet_amps,3))
 		time.sleep(0.1)
+
+		message = {
+			'thrust' : jet_thrust,
+			'current' : jet_amps
+		}
+		app_json = json.dumps(message)
+		log_time = (
+        f"{time.year}-{time.month}-{time.day}-{time.hour}:{time.minute}:{time.second}"
+    	)
+		with open(f"../logs/{log_time}.txt", "a") as outfile:
+			json.dump(message, outfile)
+			outfile.write("\n")
 
 	except (KeyboardInterrupt, SystemExit):
 		cleanAndExit()
