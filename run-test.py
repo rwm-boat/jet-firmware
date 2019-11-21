@@ -80,6 +80,7 @@ while True:
 			'current' : jet_amps
 		}
 		app_json = json.dumps(message)
+		time = datetime.today()
 		log_time = (
         f"{time.year}-{time.month}-{time.day}-{time.hour}:{time.minute}:{time.second}"
     	)
