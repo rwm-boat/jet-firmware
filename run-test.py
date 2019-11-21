@@ -22,6 +22,12 @@ referenceUnit = -858.66
 
 adc_current = 0
 
+if not EMULATE_HX711:
+	import RPi.GPIO as GPIO
+	from hx711 import HX711
+else:
+	from emulated_hx711 import HX711
+
 def setup():
 	global adc_current
 	try:
@@ -36,11 +42,7 @@ def setup():
 	except Exception:
 		print("ADC startup failed")
 
-	if not EMULATE_HX711:
-		import RPi.GPIO as GPIO
-		from hx711 import HX711
-	else:
-		from emulated_hx711 import HX711
+	
 
 
 def cleanAndExit():
