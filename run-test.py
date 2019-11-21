@@ -66,6 +66,7 @@ hx.set_reference_unit(referenceUnit)
 hx.reset()
 hx.tare()
 print("Tare done! Add weight now...")
+time_now = datetime.today()
 log_time = (
         f"{time_now.year}-{time_now.month}-{time_now.day}-{time_now.hour}:{time_now.minute}:{time_now.second}"
     	)
@@ -79,8 +80,6 @@ while True:
 			'current' : jet_amps
 		}
 		app_json = json.dumps(message)
-		time_now = datetime.today()
-		
 		with open(f"../logs/{log_time}.txt", "a") as outfile:
 			json.dump(message, outfile)
 			outfile.write("\n")
