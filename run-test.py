@@ -6,7 +6,6 @@ import board
 import busio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
-import time_now
 import os
 import glob
 import json
@@ -67,24 +66,22 @@ hx.set_reference_unit(referenceUnit)
 hx.reset()
 hx.tare()
 print("Tare done! Add weight now...")
-
+log_time = (
+        f"{time_now.year}-{time_now.month}-{time_now.day}-{time_now.hour}:{time_now.minute}:{time_now.second}"
+    	)
 while True:
 	try:
 		jet_amps = ((adc_current.voltage - 2.47) / 0.013)
 		jet_thrust = hx.get_weight(5)
 		print("Grams Thrust: ", round(jet_thrust,3), "  Jet Current: ", round(jet_amps,3))
-		
-
 		message = {
 			'thrust' : jet_thrust,
 			'current' : jet_amps
 		}
 		app_json = json.dumps(message)
 		time_now = datetime.today()
-		log_time = (
-        f"{time_now.year}-{time_now.month}-{time_now.day}-{time_now.hour}:{time_now.minute}:{time_now.second}"
-    	)
-		with open(f"../logs/{log_time}.txt", "w") as outfile:
+		
+		with open(f"../logs/{log_time}.txt", "a") as outfile:
 			json.dump(message, outfile)
 			outfile.write("\n")
 		time.sleep(0.1)
