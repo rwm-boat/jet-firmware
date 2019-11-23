@@ -70,7 +70,16 @@ hx.set_reference_unit(referenceUnit)
 hx.reset()
 hx.tare()
 print("Tare done! Add weight now...")
+
+
+Jet.zero()
+time.sleep(7)
 Jet.th_rq(10)
+time.sleep(1)
+Jet.zero()
+
+
+
 time_now = datetime.today()
 log_time = (
 		f"{time_now.year}-{time_now.month}-{time_now.day}-{time_now.hour}:{time_now.minute}:{time_now.second}"
