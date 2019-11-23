@@ -99,9 +99,10 @@ while True:
 			json.dump(message, outfile)
 			outfile.write("\n")
 		counter +=1
-		if(counter is not 255):
+		if(counter is not 98):
 			Jet.th_rq(counter)
 		else:
+			Jet.zero()
 			exit()			
 		time.sleep(0.1)
 		
