@@ -14,6 +14,8 @@ from datetime import datetime
 
 EMULATE_HX711=False
 
+Jet = Jet(True)
+
 #### --------- Calibration ---------------####
 
 referenceUnit = -858.66
@@ -41,9 +43,11 @@ def setup():
 		adc_temp3 = AnalogIn(ads, ADS.P3)
 	except Exception:
 		print("ADC startup failed")
-
-	
-
+        
+def run_test():
+		for x in range(0,100):
+			Jet.th_rq(x)
+			time.sleep(0.1)
 
 def cleanAndExit():
 	print("Cleaning...")
@@ -68,8 +72,8 @@ hx.tare()
 print("Tare done! Add weight now...")
 time_now = datetime.today()
 log_time = (
-        f"{time_now.year}-{time_now.month}-{time_now.day}-{time_now.hour}:{time_now.minute}:{time_now.second}"
-    	)
+		f"{time_now.year}-{time_now.month}-{time_now.day}-{time_now.hour}:{time_now.minute}:{time_now.second}"
+		)
 while True:
 	try:
 		jet_amps = ((adc_current.voltage - 2.47) / 0.013)
