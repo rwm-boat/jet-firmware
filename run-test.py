@@ -73,10 +73,10 @@ print("Tare done! Add weight now...")
 
 
 Jet.zero()
-time.sleep(7)
-Jet.th_rq(10)
-time.sleep(1)
-Jet.zero()
+time.sleep(5)
+# Jet.th_rq(10)
+# time.sleep(1)
+# Jet.zero()
 
 
 
@@ -84,6 +84,7 @@ time_now = datetime.today()
 log_time = (
 		f"{time_now.year}-{time_now.month}-{time_now.day}-{time_now.hour}:{time_now.minute}:{time_now.second}"
 		)
+counter = 0
 while True:
 	try:
 		jet_amps = ((adc_current.voltage - 2.47) / 0.013)
@@ -97,6 +98,12 @@ while True:
 		with open(f"../logs/{log_time}.txt", "a") as outfile:
 			json.dump(message, outfile)
 			outfile.write("\n")
+		counter +=1
+		if(counter is not 255):
+			Jet.th_rq(counter)
+		else:
+			exit()			
 		time.sleep(0.1)
+		
 	except (KeyboardInterrupt, SystemExit):
 		cleanAndExit()
