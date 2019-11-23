@@ -43,7 +43,7 @@ def setup():
 		adc_temp3 = AnalogIn(ads, ADS.P3)
 	except Exception:
 		print("ADC startup failed")
-        
+
 def run_test():
 		for x in range(0,100):
 			Jet.th_rq(x)
@@ -70,6 +70,7 @@ hx.set_reference_unit(referenceUnit)
 hx.reset()
 hx.tare()
 print("Tare done! Add weight now...")
+Jet.th_rq(10)
 time_now = datetime.today()
 log_time = (
 		f"{time_now.year}-{time_now.month}-{time_now.day}-{time_now.hour}:{time_now.minute}:{time_now.second}"
