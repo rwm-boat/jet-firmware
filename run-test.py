@@ -102,7 +102,7 @@ while True:
 			json.dump(message, outfile)
 			outfile.write("\n")
 			thrust_arr.append(jet_thrust)
-			current_arr.append(current_arr)
+			current_arr.append(jet_amps)
 		time.sleep(0.1)
 	
 		counter +=1
