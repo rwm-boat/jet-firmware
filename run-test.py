@@ -22,6 +22,8 @@ referenceUnit = -858.66
 
 adc_current = 0
 
+values = []
+
 if not EMULATE_HX711:
 	import RPi.GPIO as GPIO
 	from hx711 import HX711
@@ -83,6 +85,9 @@ while True:
 		with open(f"../logs/{log_time}.txt", "a") as outfile:
 			json.dump(message, outfile)
 			outfile.write("\n")
+			values.append(jet_thrust)
 		time.sleep(0.1)
+	
 	except (KeyboardInterrupt, SystemExit):
+		print("Max Thrust (grams): ", max(values))
 		cleanAndExit()
