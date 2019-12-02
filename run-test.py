@@ -24,7 +24,8 @@ referenceUnit = -858.66
 
 adc_current = 0
 
-values = []
+thrust_arr = []
+current_arr = []
 
 if not EMULATE_HX711:
 	import RPi.GPIO as GPIO
@@ -91,7 +92,7 @@ while True:
 	try:
 		jet_amps = ((adc_current.voltage - 2.47) / 0.013)
 		jet_thrust = hx.get_weight(5)
-		print("Grams Thrust: ", round(jet_thrust,3), "  Jet Current: ", round(jet_amps,3))
+		print("Grams Thrust: ", round(jet_thrust,3), "  Jet Current: ", round(jet_amps,3), " Throttle Request: ", counter)
 		message = {
 			'thrust' : jet_thrust,
 			'current' : jet_amps
@@ -100,7 +101,7 @@ while True:
 		with open(f"../logs/{log_time}.txt", "a") as outfile:
 			json.dump(message, outfile)
 			outfile.write("\n")
-			values.append(jet_thrust)
+			thrust_arr.append(jet_thrust)
 		time.sleep(0.1)
 	
 		counter +=1
@@ -112,5 +113,6 @@ while True:
 		time.sleep(0.1)
 		
 	except (KeyboardInterrupt, SystemExit):
-		print("Max Thrust (grams): ", max(values))
+		print("Max Thrust (grams): ", max(thrust_arr))
+		print("Max Current (amps): ", max(current_arr))
 		cleanAndExit()
