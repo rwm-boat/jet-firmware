@@ -14,6 +14,8 @@ from datetime import datetime
 
 EMULATE_HX711=False
 
+Jet = Jet(True)
+
 #### --------- Calibration ---------------####
 
 referenceUnit = -858.66
@@ -44,8 +46,10 @@ def setup():
 	except Exception:
 		print("ADC startup failed")
 
-	
-
+def run_test():
+		for x in range(0,100):
+			Jet.th_rq(x)
+			time.sleep(0.1)
 
 def cleanAndExit():
 	print("Cleaning...")
@@ -68,10 +72,21 @@ hx.set_reference_unit(referenceUnit)
 hx.reset()
 hx.tare()
 print("Tare done! Add weight now...")
+
+
+Jet.zero()
+time.sleep(5)
+# Jet.th_rq(10)
+# time.sleep(1)
+# Jet.zero()
+
+
+
 time_now = datetime.today()
 log_time = (
-        f"{time_now.year}-{time_now.month}-{time_now.day}-{time_now.hour}:{time_now.minute}:{time_now.second}"
-    	)
+		f"{time_now.year}-{time_now.month}-{time_now.day}-{time_now.hour}:{time_now.minute}:{time_now.second}"
+		)
+counter = 0
 while True:
 	try:
 		jet_amps = ((adc_current.voltage - 2.47) / 0.013)
@@ -88,6 +103,14 @@ while True:
 			values.append(jet_thrust)
 		time.sleep(0.1)
 	
+		counter +=1
+		if(counter is not 98):
+			Jet.th_rq(counter)
+		else:
+			Jet.zero()
+			exit()			
+		time.sleep(0.1)
+		
 	except (KeyboardInterrupt, SystemExit):
 		print("Max Thrust (grams): ", max(values))
 		cleanAndExit()
