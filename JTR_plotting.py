@@ -11,7 +11,6 @@ jet_current = []
 thrust = []
 efficiency = []
 
-
 def load_log():
     global jet_current
     global thrust

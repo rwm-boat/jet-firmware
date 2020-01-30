@@ -106,12 +106,12 @@ while True:
 		time.sleep(0.1)
 	
 		counter +=1
-		if(counter is not 98):
+		if(counter is not 50):
 			Jet.th_rq(counter)
 		else:
 			Jet.zero()
 			exit()			
-		time.sleep(0.1)
+		time.sleep(0.2)
 		
 	except (KeyboardInterrupt, SystemExit):
 		print("Max Thrust (grams): ", max(thrust_arr))
