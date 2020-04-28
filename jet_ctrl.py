@@ -3,10 +3,10 @@ from jet import Jet
 from jet_logging import * #this starts and runs the logging for the jets
 from mqtt_client.subscriber import Subscriber
 from threading import Thread
-from simple_pid import PID
+# from simple_pid import PID
 import json
 import time
-import numpy as np 
+# import numpy as np 
 
 
 #global varriables
