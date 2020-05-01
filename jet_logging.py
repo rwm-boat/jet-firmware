@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import board
 import busio
-# import adafruit_ads1x15.ads1115 as ADS
-from Adafruit_ADS1x15.analog_in import AnalogIn
-import Adafruit_ADS1x15 as ADS
+import adafruit_ads1x15.ads1115 as ADS
+from adafruit_ads1x15.analog_in import AnalogIn
+#import Adafruit_ADS1x15 as ADS
 import time
 import os
 import glob
