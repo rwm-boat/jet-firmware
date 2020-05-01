@@ -71,8 +71,8 @@ def publish_temp_status():
 
 	}
 	print(message)
-	app_json = json.dumps(message)
-	pubber.publish("/status/temp",app_json)
+	# app_json = json.dumps(message)
+	# pubber.publish("/status/temp",app_json)
 
 def publish_adc_status():
 
@@ -93,8 +93,8 @@ def publish_adc_status():
 		'MPA_temp' : MPA_temp
 	}
 	print(message)
-	app_json = json.dumps(message)
-	pubber.publish("/status/adc",app_json)
+	# app_json = json.dumps(message)
+	# pubber.publish("/status/adc",app_json)
 
 # MAIN METHOD
 
