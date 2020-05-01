@@ -25,20 +25,22 @@ try:
 	chan3 = AnalogIn(ads, ADS.P2) #pack voltage
 	chan4 = AnalogIn(ads, ADS.P3) #comp temp
 
-	# # Setup Temperature Sensors
-	# ads_temp = ADS.ADS1115(i2c, address=0x49)
-	# ads_temp.gain = 1
-	# jet1_in = AnalogIn(ads_temp, ADS.P0)
-	# jet2_in = AnalogIn(ads_temp, ADS.P1)
-	# compartment_in = AnalogIn(ads_temp, ADS.P2)
+	# Setup Temperature Sensors
+	ads_temp = ADS.ADS1115(i2c, address=0x49)
+	ads_temp.gain = 1
+	temp1 = AnalogIn(ads_temp, ADS.P0)
+	temp2 = AnalogIn(ads_temp, ADS.P1)
+	temp3 = AnalogIn(ads_temp, ADS.P2)
+	temp4 = AnalogIn(ads_temp, ADS.P3)
 
 except Exception:
 	pass
 
-# Temperature global variables
-# jet1_temp = 0
-# jet2_temp = 0
-# compartment_temp = 0
+#Temperature global variables
+temp1 = 0
+temp2 = 0
+temp3 = 0
+temp4 = 0
 
 # Setup Pubber
 pubber = Publisher(client_id="jet-pubber")
@@ -54,23 +56,27 @@ def log_temp_current():
 
 def publish_temp_status():
 		
-	global jet1_temp
-	global compartment_temp
-	global jet2_temp
+	global temp1
+	global temp2
+	global temp3
+	global temp4
 
 	# convert input voltage in mV to temperature in centigrade
-	jet1_temp = ((jet1_in.voltage * 1000) - 500)/10
-	jet2_temp = ((jet2_in.voltage * 1000) - 500)/10
-	compartment_temp = ((compartment_in.voltage * 1000) - 500)/10
+	jet1_temp = ((temp1.voltage * 1000) - 500)/10
+	jet2_temp = ((temp2.voltage * 1000) - 500)/10
+	jet3_temp = ((temp3.voltage * 1000) - 500)/10
+	jet4_temp = ((temp4.voltage * 1000) - 500)/10
 	
 	message = {
 			'jet1_temp' : str(jet1_temp),
 			'jet2_temp': str(jet2_temp),
-			'compartment_temp' : str(compartment_temp)
+			'jet3_temp' : str(jet3_temp),
+			'jet4_temp' : str(jet4_temp)
+
 	}
-	# print(message)
-	app_json = json.dumps(message)
-	pubber.publish("/status/temp",app_json)
+	print(message)
+	# app_json = json.dumps(message)
+	# pubber.publish("/status/temp",app_json)
 
 def publish_adc_status():
 
