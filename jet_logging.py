@@ -12,6 +12,11 @@ import json
 from threading import Thread
 import sys, traceback
 
+## port jet (jet2) motor -- jet1_temp
+## jet2 esc -- jet3_temp
+## jet1 motor -- jet2_temp
+## jet1 exc -- jet4_temp
+
 try:
 	# Setup Current Sensors
 	i2c = busio.I2C(board.SCL, board.SDA)
@@ -26,10 +31,10 @@ try:
 	# Setup Temperature Sensors
 	ads_temp = ADS.ADS1115(i2c, address=0x49)
 	ads_temp.gain = 1
-	temp1 = AnalogIn(ads_temp, ADS.P0)
-	temp2 = AnalogIn(ads_temp, ADS.P1)
-	temp3 = AnalogIn(ads_temp, ADS.P2)
-	temp4 = AnalogIn(ads_temp, ADS.P3)
+	jet2_motor_temp = AnalogIn(ads_temp, ADS.P0)
+	jet1_motor_temp = AnalogIn(ads_temp, ADS.P1)
+	jet2_esc_temp = AnalogIn(ads_temp, ADS.P2)
+	jet1_esc_temp = AnalogIn(ads_temp, ADS.P3)
 
 except Exception:
 	traceback.print_exc(file=sys.stdout)
@@ -52,22 +57,22 @@ def log_temp_current():
 
 def publish_temp_status():
 		
-	global temp1
-	global temp2
-	global temp3
-	global temp4
+	global jet2_motor_temp
+	global jet1_motor_temp
+	global jet2_esc_temp
+	global jet1_esc_temp
 
 	# convert input voltage in mV to temperature in centigrade
-	jet1_temp = ((temp1.voltage * 1000) - 500)/10
-	jet2_temp = ((temp2.voltage * 1000) - 500)/10
-	jet3_temp = ((temp3.voltage * 1000) - 500)/10
-	jet4_temp = ((temp4.voltage * 1000) - 500)/10
+	jet2_motor = ((jet2_motor_temp.voltage * 1000) - 500)/10
+	jet1_motor = ((jet1_motor_temp.voltage * 1000) - 500)/10
+	jet2_esc = ((jet2_esc_temp.voltage * 1000) - 500)/10
+	jet1_motor = ((jet1_esc_temp.voltage * 1000) - 500)/10
 	
 	message = {
-			'jet1_temp' : str(jet1_temp),
-			'jet2_temp': str(jet2_temp),
-			'jet3_temp' : str(jet3_temp),
-			'jet4_temp' : str(jet4_temp)
+			'jet2_motor_temp' : str(jet2_motor),
+			'jet1_motor_temp': str(jet1_motor),
+			'jet2_esc_temp' : str(jet2_esc),
+			'jet1_esc_temp' : str(jet1_motor)
 
 	}
 	print(message)
