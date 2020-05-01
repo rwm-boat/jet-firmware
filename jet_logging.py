@@ -16,7 +16,7 @@ try:
 	# Setup Current Sensors
 	i2c = busio.I2C(board.SCL, board.SDA)
 
-	ads = ADS.ADS1115(address=0x48)
+	ads = ADS.ADS1115(i2c, address=0x48)
 	ads.gain = 1
 	chan = AnalogIn(ads, ADS.P0) #current 1
 	chan2 = AnalogIn(ads,ADS.P1) #current 2
@@ -24,7 +24,7 @@ try:
 	chan4 = AnalogIn(ads, ADS.P3) #comp temp
 
 	# Setup Temperature Sensors
-	ads_temp = ADS.ADS1115(address=0x49)
+	ads_temp = ADS.ADS1115(i2c, address=0x49)
 	ads_temp.gain = 1
 	temp1 = AnalogIn(ads_temp, ADS.P0)
 	temp2 = AnalogIn(ads_temp, ADS.P1)
