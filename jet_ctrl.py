@@ -88,6 +88,7 @@ def on_vector_received(client, userdata, message):
 
     obj = json.loads(message.payload.decode('utf-8'))
     target_heading = float(obj["heading"])
+    target_heading = 120
     magnitude = float(obj["magnitude"])
     print("Vector Received")
 
@@ -192,7 +193,7 @@ def main():
             "/status/vector" : on_vector_received,
             "/status/adc" :on_adc_received
         }
-        subber = Subscriber(client_id="jet_ctrl_id", broker_ip="192.168.1.170", default_subscriptions=default_subscriptions)
+        subber = Subscriber(client_id="jet_ctrl_id", broker_ip="192.168.8.170", default_subscriptions=default_subscriptions)
         thread = Thread(target=subber.listen)
         thread.start()
     except Exception:
