@@ -11,9 +11,6 @@ from mqtt_client.publisher import Publisher
 import json
 from threading import Thread
 
-
-
-
 try:
 	# Setup Current Sensors
 	i2c = busio.I2C(board.SCL, board.SDA)
@@ -49,7 +46,7 @@ def log_temp_current():
 	while True:
 		try:
 			publish_adc_status()
-			# publish_temp_status()
+			publish_temp_status()
 			time.sleep(.1)
 		except Exception:
 			pass
