@@ -86,6 +86,11 @@ def publish_temp_status():
 
 def publish_adc_status():
 
+	global chan
+	global chan2
+	global chan3
+	global chan4
+
 	jet1_amps = ((chan.voltage - 2.47) / 0.013)
 	jet2_amps = ((chan2.voltage - 2.47) / 0.013)
 	pack_voltage = round((chan3.voltage * 5),2)
