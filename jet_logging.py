@@ -3,13 +3,14 @@ import board
 import busio
 # import adafruit_ads1x15.ads1115 as ADS
 # from adafruit_ads1x15.analog_in import AnalogIn
-import Adafruit_ADS1x15
+import Adafruit_ADS1x15 as ADS
 import time
 import os
 import glob
 from mqtt_client.publisher import Publisher
 import json
 from threading import Thread
+import sys, traceback
 
 try:
 	# Setup Current Sensors
@@ -31,13 +32,18 @@ try:
 	temp4 = AnalogIn(ads_temp, ADS.P3)
 
 except Exception:
-	pass
+	traceback.print_exc(file=sys.stdout)
+#        pass
 
 #Temperature global variables
-temp1 = 0
-temp2 = 0
-temp3 = 0
-temp4 = 0
+#temp1 = 0
+#temp2 = 0
+#temp3 = 0
+#temp4 = 0
+#chan = 0
+#chan2 = 0
+#chan3 = 0
+#chan4 = 0
 
 # Setup Pubber
 pubber = Publisher(client_id="jet-pubber")
@@ -49,7 +55,10 @@ def log_temp_current():
 			publish_temp_status()
 			time.sleep(.1)
 		except Exception:
-			pass
+                    #    print('error')
+                        traceback.print_exc(file=sys.stdout)
+			#pass
+
 
 def publish_temp_status():
 		
@@ -96,5 +105,5 @@ def publish_adc_status():
 
 thread = Thread(target=log_temp_current)
 thread.start()
-
+print('fuck you python')
 
