@@ -35,16 +35,6 @@ except Exception:
 	traceback.print_exc(file=sys.stdout)
 #        pass
 
-#Temperature global variables
-#temp1 = 0
-#temp2 = 0
-#temp3 = 0
-#temp4 = 0
-#chan = 0
-#chan2 = 0
-#chan3 = 0
-#chan4 = 0
-
 # Setup Pubber
 pubber = Publisher(client_id="jet-pubber")
 
@@ -81,8 +71,8 @@ def publish_temp_status():
 
 	}
 	print(message)
-	# app_json = json.dumps(message)
-	# pubber.publish("/status/temp",app_json)
+	app_json = json.dumps(message)
+	pubber.publish("/status/temp",app_json)
 
 def publish_adc_status():
 
