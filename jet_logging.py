@@ -75,9 +75,9 @@ def publish_temp_status():
 			'jet1_esc_temp' : str(jet1_esc)
 
 	}
-	print(message)
-	# app_json = json.dumps(message)
-	# pubber.publish("/status/temp",app_json)
+	# print(message)
+	app_json = json.dumps(message)
+	pubber.publish("/status/temp",app_json)
 
 def publish_adc_status():
 
@@ -99,9 +99,9 @@ def publish_adc_status():
 		'pack_voltage' : pack_voltage,
 		'MPA_temp' : MPA_temp
 	}
-	print(message)
-	# app_json = json.dumps(message)
-	# pubber.publish("/status/adc",app_json)
+	# print(message)
+	app_json = json.dumps(message)
+	pubber.publish("/status/adc",app_json)
 
 # MAIN METHOD
 
