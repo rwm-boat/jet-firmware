@@ -80,10 +80,10 @@ class Jet:
 
         if self.port_jet: #port jet
             ESC2.angle = vel
-            # print("Jet 2 set th_rq: %s" %(mag))
+            print("Jet 2 set th_rq: %s" %(mag))
         else:             #stardboard jet
             ESC1.angle = vel
-            # print("Jet 1 set th_rq: %s" %(mag))
+            print("Jet 1 set th_rq: %s" %(mag))
     #--end th_rq--
 
     def rb_rq(self,level):
@@ -96,29 +96,29 @@ class Jet:
         
         if self.port_jet: #port jet
             RB2.angle = pos
-            # print("Jet 2 set rb_rq: " + level)
+            print("Jet 2 set rb_rq: " + level)
         else:             #starboard jet
             RB1.angle = pos
-            # print("Jet 1 set rb_rq: " + level)
+            print("Jet 1 set rb_rq: " + level)
     #--end rb_rq--
 
     def dir_rq(self,angle): #range is 25 to -25 degrees (phyiscally)
         if angle > DIR_limit:
             angle = DIR_limit
-            #print("Director limited to 25")
+            print("Director limited to 25")
         if angle < -DIR_limit:
             angle = -DIR_limit
-            #print("Director limited to -25")
+            print("Director limited to -25")
 
         #PWM negative goes right, so I negate it to make it follow the compass sign
         if self.port_jet: #port jet
             dir2PWM = 90 + (-DIR2_offset) + (-angle)
             DIR2.angle = dir2PWM
-            # print("Jet 2 set dir_rq: %s" %(angle))
+            print("Jet 2 set dir_rq: %s" %(angle))
         else:
             dir1PWM = 90 + (-DIR1_offset) + (-angle)
             DIR1.angle = dir1PWM
-            # print("Jet 1 set dir_rq: %s" %(angle))
+            print("Jet 1 set dir_rq: %s" %(angle))
     #--end dir_rq--
 
     def startup(self):

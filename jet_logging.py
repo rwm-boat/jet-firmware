@@ -66,13 +66,13 @@ def publish_temp_status():
 	jet2_motor = ((jet2_motor_temp.voltage * 1000) - 500)/10
 	jet1_motor = ((jet1_motor_temp.voltage * 1000) - 500)/10
 	jet2_esc = ((jet2_esc_temp.voltage * 1000) - 500)/10
-	jet1_motor = ((jet1_esc_temp.voltage * 1000) - 500)/10
+	jet1_esc = ((jet1_esc_temp.voltage * 1000) - 500)/10
 	
 	message = {
 			'jet2_motor_temp' : str(jet2_motor),
 			'jet1_motor_temp': str(jet1_motor),
 			'jet2_esc_temp' : str(jet2_esc),
-			'jet1_esc_temp' : str(jet1_motor)
+			'jet1_esc_temp' : str(jet1_esc)
 
 	}
 	print(message)
@@ -86,8 +86,10 @@ def publish_adc_status():
 	global chan3
 	global chan4
 
-	jet1_amps = ((chan.voltage - 2.47) / 0.013)
-	jet2_amps = ((chan2.voltage - 2.47) / 0.013)
+	# jet1_amps = ((chan.voltage - 2.47) / 0.013)
+	# jet2_amps = ((chan2.voltage - 2.47) / 0.013)
+	jet1_amps = ((chan.voltage - 0.6) / 0.0267)
+	jet2_amps = ((chan2.voltage - 0.6) / 0.0267)
 	pack_voltage = round((chan3.voltage * 5),2)
 	MPA_temp = round((chan4.voltage * 1000) - 500)/10
 
