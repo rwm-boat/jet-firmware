@@ -8,7 +8,7 @@ kit = ServoKit(channels=16)
 DIR1_offset = 0
 DIR2_offset = 0
 
-DIR_limit = 25
+DIR_limit = 23
 
 ESC1 = kit.servo[6]
 DIR1 = kit.servo[5]
@@ -102,13 +102,13 @@ class Jet:
             print("Jet 1 set rb_rq: " + level)
     #--end rb_rq--
 
-    def dir_rq(self,angle): #range is 25 to -25 degrees (phyiscally)
+    def dir_rq(self,angle): #range is 23 to -23 degrees (phyiscally)
         if angle > DIR_limit:
             angle = DIR_limit
-            print("Director limited to 25")
+            print("Director limited to 23")
         if angle < -DIR_limit:
             angle = -DIR_limit
-            print("Director limited to -25")
+            print("Director limited to -23")
 
         #PWM negative goes right, so I negate it to make it follow the compass sign
         if self.port_jet: #port jet
