@@ -8,6 +8,8 @@ import json
 import time
 # import numpy as np 
 
+#Test Variables
+HEADING_HOLD = 90
 
 #global varriables
 gps_speed = 0
@@ -101,7 +103,7 @@ def on_vector_received(client, userdata, message):
 def calc_heading_delta():
     global heading_delta
     
-    heading_delta = 90 - filtered_compass
+    heading_delta = HEADING_HOLD - filtered_compass
 
     # Fixes 360 errors (_delta is saying to turn left or right 180 degrees)
     # -90 turn left, 90 turn right

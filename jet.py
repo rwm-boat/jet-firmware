@@ -11,12 +11,12 @@ DIR2_offset = -1
 DIR_limit = 25
 
 ESC1 = kit.servo[4]
-RB1 = kit.servo[5]
-DIR1 = kit.servo[6]
+DIR1 = kit.servo[5]
+RB1 = kit.servo[6]
 
 ESC2 = kit.servo[0]
-RB2 = kit.servo[1]
-DIR2 = kit.servo[2]
+DIR2 = kit.servo[1]
+RB2 = kit.servo[2]
 
 class Jet:
 
