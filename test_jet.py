@@ -10,11 +10,11 @@ def main():
     Jet2.zero()
 
     while(True):
-        for x in range(-23,23,1):
+        for x in range(-20,20,1):
             Jet1.dir_rq(x)
             Jet2.dir_rq(x)
             time.sleep(0.1)
-        for y in range(23,-23,-1):
+        for y in range(20,-20,-1):
             Jet1.dir_rq(y)
             Jet2.dir_rq(y)
             time.sleep(0.1)
