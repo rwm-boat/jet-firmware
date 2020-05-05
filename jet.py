@@ -5,8 +5,8 @@ kit = ServoKit(channels=16)
 
 #positive -> trim right
 #negative -> trim left
-DIR1_offset = 5
-DIR2_offset = -1
+DIR1_offset = 0
+DIR2_offset = 0
 
 DIR_limit = 25
 
@@ -88,11 +88,11 @@ class Jet:
 
     def rb_rq(self,level):
         if level == 'down':
-            pos = 20
+            pos = 145
         if level == 'mid':
             pos = 70
         if level == 'up':
-            pos = 130
+            pos = 40
         
         if self.port_jet: #port jet
             RB2.angle = pos
