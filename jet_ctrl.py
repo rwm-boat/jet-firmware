@@ -9,7 +9,7 @@ import time
 # import numpy as np 
 
 #Test Variables
-HEADING_HOLD = 90
+HEADING_HOLD = 140
 
 #global varriables
 gps_speed = 0
@@ -36,6 +36,7 @@ MAX_SPEED = 11.0
 
 Kp = 0.3
 Kd = 0.01
+
 KD_SPEED = 10
 MVING_AVG_N = 30 # heading_delta moving average count
 GO_STRAIGHT_HOLD = 20 # scalar (_delta / go_straight_hold)
@@ -92,6 +93,7 @@ def on_vector_received(client, userdata, message):
     target_heading = float(obj["heading"])
     magnitude = float(obj["magnitude"])
     print("Vector Received")
+    print(target_heading)
 
     if target_heading == 0 and magnitude == 0:
         print("Waypoint hit")
@@ -103,7 +105,7 @@ def on_vector_received(client, userdata, message):
 def calc_heading_delta():
     global heading_delta
     
-    heading_delta = HEADING_HOLD - filtered_compass
+    heading_delta = target_heading - filtered_compass
 
     # Fixes 360 errors (_delta is saying to turn left or right 180 degrees)
     # -90 turn left, 90 turn right
@@ -128,13 +130,13 @@ def speed_ctrl():
     if magnitude == 4: target_speed = MIN_PLANE_SPEED
     if magnitude == 5: target_speed = MAX_SPEED
     
-    request = magnitude*15
+    request = magnitude*12
 
     if abs(heading_delta) > 90:
-        request = 15
+        request = 9
     
-    # Jet1.th_rq(request)
-    # Jet2.th_rq(request)
+    Jet1.th_rq(request)
+    Jet2.th_rq(request)
 
 
 def calc_speed_state():
